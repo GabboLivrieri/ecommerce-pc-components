@@ -21,4 +21,9 @@ public class Venditore {
 
     @Column(length = 20)
     private String telefono;
+
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     }
