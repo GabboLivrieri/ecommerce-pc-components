@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <-- Serve per usare il ciclo for nell'HTML
-import { ProdottoService } from './services/prodottoService';
+import { ProdottoService } from './services/prodotto.service';
+import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from "./components/navbar/navbar";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule], // <-- Ricordati di importarlo qui
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [CommonModule, RouterOutlet, NavbarComponent], // <-- Ricordati di importarlo qui
+  templateUrl: './app.html',
+  styleUrl: './app.css'
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
   listaProdotti: any[] = [];
 
   // Iniettiamo il nostro servizio nel costruttore
