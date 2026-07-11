@@ -1,0 +1,39 @@
+<form #prodottoForm="ngForm" (ngSubmit)="inviaProdotto()" style="margin-bottom: 30px;">
+  <input [(ngModel)]="nuovoProdotto.nome" name="nome" placeholder="Nome Componente" required><br><br>
+  <input [(ngModel)]="nuovoProdotto.descrizione" name="descrizione" placeholder="Descrizione"><br><br>
+  <p>Prezzo:</p>
+  <input type="number" [(ngModel)]="nuovoProdotto.prezzo" name="prezzo" placeholder="Prezzo" required><br><br>
+  <p>Quantità disponibile:</p>
+  <input type="number" [(ngModel)]="nuovoProdotto.quantita" name="quantita" placeholder="Quantità" required><br><br>
+
+  <label for="categoria">Categoria: </label>
+  <select [(ngModel)]="nuovoProdotto.categoria.id" name="categoriaId" id="categoria">
+    <option [ngValue]="1">Processori</option>
+    <option [ngValue]="2">Schede Video</option>
+    <option [ngValue]="3">Schede Madri</option>
+    <option [ngValue]="4">RAM</option>
+    <option [ngValue]="5">SSD</option>
+    <option [ngValue]="7">Alimentatori</option>
+    <option [ngValue]="8">Case</option>
+  </select>
+  <br><br>
+
+  <button type="submit">Aggiungi al catalogo</button>
+</form>
+
+<div>
+
+  <h2>Lista Prodotti (Sintassi Nuova con Async Pipe)</h2>
+
+  @if (prodotti$ | async; as prodotti) {
+    <div class="griglia-prodotti" style="display: flex; flex-wrap: wrap;">
+      @for (item of prodotti; track item.id) {
+        <app-prodotto-card [prodotto]="item"></app-prodotto-card>
+      } @empty {
+        <p>Nessun prodotto disponibile nel catalogo.</p>
+      }
+    </div>
+  } @else {
+    <p>Caricamento dati in corso...</p>
+  }
+</div>

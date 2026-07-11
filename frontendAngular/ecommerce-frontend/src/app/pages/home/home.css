@@ -1,0 +1,29 @@
+.home-container {
+  padding: 60px 20px;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.home-subtitle {
+  color: #666;
+  max-width: 600px;
+  margin: 20px auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.btn-esplora {
+  padding: 12px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.btn-esplora:hover {
+  background-color: #0056b3;
+}
