@@ -1,5 +1,5 @@
 package com.betacom.ecommerce.model;
-
+ 
 import jakarta.persistence.*;
 
 @Entity

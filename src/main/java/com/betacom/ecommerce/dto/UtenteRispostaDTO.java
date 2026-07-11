@@ -8,7 +8,7 @@ public class UtenteRispostaDTO {
     private String cognome;
     private String email;
     private Ruolo ruolo;
-	public Integer getId() { 
+	public Integer getId() {  
 		return id;
 	}
 	
