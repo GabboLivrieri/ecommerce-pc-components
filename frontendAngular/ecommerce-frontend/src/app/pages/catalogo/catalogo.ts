@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdottoService } from '../../services/prodotto.service';
 import { ProdottoCardComponent } from '../../components/prodotto-card/prodotto-card';
-import { Prodotto } from '../../models/prodotto.model';
+import { Prodotto } from '../../models/prodotto.models';
 import { BehaviorSubject, switchMap } from 'rxjs';
 
 @Component({
