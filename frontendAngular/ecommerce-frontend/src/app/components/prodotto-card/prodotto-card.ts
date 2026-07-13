@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Prodotto } from '../../models/prodotto.model';
+import { Prodotto } from '../../models/prodotto.models';
 
 @Component({
   selector: 'app-prodotto-card',
