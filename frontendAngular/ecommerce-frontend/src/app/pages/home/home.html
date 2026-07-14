@@ -1,9 +1,57 @@
-<div class="home-container">
-  <h1>Sono Stressato, finiamo sto progetto per favore</h1>
-  <p class="home-subtitle">
-    Trova i migliori processori, schede video e memorie per configurare la tua prossima build da gaming o da lavoro.
-  </p>
-  <button routerLink="/catalogo" class="btn-esplora">
-    Esplora il Catalogo
-  </button>
-</div>
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">Il tuo negozio di componenti PC</span>
+    <h1>Costruisci il PC dei tuoi sogni</h1>
+    <p class="hero-subtitle">
+      Da PC E-Commerce trovi processori, schede video, RAM, SSD e tutto il necessario per assemblare,
+      aggiornare o riparare il tuo computer. Componenti selezionati, prezzi competitivi e la possibilità
+      per venditori verificati di proporre le proprie offerte.
+    </p>
+    <div class="hero-actions">
+      <button routerLink="/catalogo" class="btn-primary">Esplora il Catalogo</button>
+      <a href="#novita" class="btn-secondary">Scopri le novità</a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="feature">
+    <span class="feature-icon">🚚</span>
+    <h3>Spedizione rapida</h3>
+    <p>Consegna in 24/48h su tutti i componenti disponibili in magazzino.</p>
+  </div>
+  <div class="feature">
+    <span class="feature-icon">🛡️</span>
+    <h3>Garanzia ufficiale</h3>
+    <p>Ogni prodotto è coperto da garanzia del produttore.</p>
+  </div>
+  <div class="feature">
+    <span class="feature-icon">💬</span>
+    <h3>Assistenza dedicata</h3>
+    <p>Un team di appassionati pronto a consigliarti la configurazione giusta.</p>
+  </div>
+</section>
+
+<section class="novita" id="novita">
+  <div class="section-header">
+    <h2>Nuovi Arrivi</h2>
+    <p>Gli ultimi componenti aggiunti al nostro catalogo</p>
+  </div>
+
+  @if (caricamento) {
+    <p class="stato-messaggio">Caricamento prodotti in corso...</p>
+  } @else if (errore) {
+    <p class="stato-messaggio">Non è stato possibile caricare i prodotti in questo momento.</p>
+  } @else if (prodottiInEvidenza.length > 0) {
+    <div class="griglia-novita">
+      @for (prodotto of prodottiInEvidenza; track prodotto.id) {
+        <app-prodotto-card [prodotto]="prodotto"></app-prodotto-card>
+      }
+    </div>
+    <div class="vedi-tutti">
+      <a routerLink="/catalogo">Vedi tutto il catalogo →</a>
+    </div>
+  } @else {
+    <p class="stato-messaggio">Nessun prodotto disponibile al momento.</p>
+  }
+</section>

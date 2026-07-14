@@ -1,39 +1,93 @@
-<form #prodottoForm="ngForm" (ngSubmit)="inviaProdotto()" style="margin-bottom: 30px;">
-  <input [(ngModel)]="nuovoProdotto.nome" name="nome" placeholder="Nome Componente" required><br><br>
-  <input [(ngModel)]="nuovoProdotto.descrizione" name="descrizione" placeholder="Descrizione"><br><br>
-  <p>Prezzo:</p>
-  <input type="number" [(ngModel)]="nuovoProdotto.prezzo" name="prezzo" placeholder="Prezzo" required><br><br>
-  <p>Quantità disponibile:</p>
-  <input type="number" [(ngModel)]="nuovoProdotto.quantita" name="quantita" placeholder="Quantità" required><br><br>
+<section class="catalogo-header">
+  <div class="catalogo-titolo">
+    <h1>Catalogo Componenti</h1>
+    <p>Sfoglia tutti i componenti disponibili, filtra per categoria o cerca per nome.</p>
+  </div>
+  <button type="button" class="btn-toggle-form" (click)="toggleForm()">
+    {{ mostraForm ? 'Chiudi form' : '+ Aggiungi prodotto' }}
+  </button>
+</section>
 
-  <label for="categoria">Categoria: </label>
-  <select [(ngModel)]="nuovoProdotto.categoria.id" name="categoriaId" id="categoria">
-    <option [ngValue]="1">Processori</option>
-    <option [ngValue]="2">Schede Video</option>
-    <option [ngValue]="3">Schede Madri</option>
-    <option [ngValue]="4">RAM</option>
-    <option [ngValue]="5">SSD</option>
-    <option [ngValue]="7">Alimentatori</option>
-    <option [ngValue]="8">Case</option>
+@if (mostraForm) {
+  <section class="form-prodotto">
+    <h2>Aggiungi un nuovo componente</h2>
+
+    <form #prodottoForm="ngForm" (ngSubmit)="inviaProdotto()">
+      <div class="form-grid">
+        <label class="campo">
+          <span>Nome componente</span>
+          <input [(ngModel)]="nuovoProdotto.nome" name="nome" placeholder="Es. Intel Core i7-14700K" required>
+        </label>
+
+        <label class="campo campo-full">
+          <span>Descrizione</span>
+          <textarea [(ngModel)]="nuovoProdotto.descrizione" name="descrizione" rows="2" placeholder="Breve descrizione del prodotto"></textarea>
+        </label>
+
+        <label class="campo">
+          <span>Prezzo (€)</span>
+          <input type="number" min="0" step="0.01" [(ngModel)]="nuovoProdotto.prezzo" name="prezzo" required>
+        </label>
+
+        <label class="campo">
+          <span>Quantità disponibile</span>
+          <input type="number" min="0" [(ngModel)]="nuovoProdotto.quantita" name="quantita" required>
+        </label>
+
+        <label class="campo">
+          <span>Categoria</span>
+          <select [(ngModel)]="categoriaFormId" name="categoriaId" required>
+            <option [ngValue]="null" disabled>Seleziona una categoria</option>
+            @for (categoria of categorie; track categoria.id) {
+              <option [ngValue]="categoria.id">{{ categoria.nome }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="campo">
+          <span>Immagine (nome file)</span>
+          <input [(ngModel)]="nuovoProdotto.immagine" name="immagine" placeholder="nome-file.jpg">
+        </label>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="invioInCorso">
+        {{ invioInCorso ? 'Salvataggio...' : 'Aggiungi al catalogo' }}
+      </button>
+    </form>
+  </section>
+}
+
+<section class="filtri-bar">
+  <input
+    type="text"
+    class="input-ricerca"
+    placeholder="Cerca per nome o descrizione..."
+    [(ngModel)]="filtri.ricerca"
+    (ngModelChange)="aggiornaFiltri()"
+  >
+
+  <select class="select-categoria" [(ngModel)]="filtri.categoriaId" (ngModelChange)="aggiornaFiltri()">
+    <option [ngValue]="null">Tutte le categorie</option>
+    @for (categoria of categorie; track categoria.id) {
+      <option [ngValue]="categoria.id">{{ categoria.nome }}</option>
+    }
   </select>
-  <br><br>
+</section>
 
-  <button type="submit">Aggiungi al catalogo</button>
-</form>
-
-<div>
-
-  <h2>Lista Prodotti (Sintassi Nuova con Async Pipe)</h2>
-
-  @if (prodotti$ | async; as prodotti) {
-    <div class="griglia-prodotti" style="display: flex; flex-wrap: wrap;">
-      @for (item of prodotti; track item.id) {
-        <app-prodotto-card [prodotto]="item"></app-prodotto-card>
-      } @empty {
-        <p>Nessun prodotto disponibile nel catalogo.</p>
-      }
-    </div>
-  } @else {
-    <p>Caricamento dati in corso...</p>
+<section class="lista-prodotti">
+  @if (caricamento) {
+    <p class="stato-messaggio">Caricamento prodotti in corso...</p>
+  } @else if (errore) {
+    <p class="stato-messaggio">Non è stato possibile caricare il catalogo in questo momento.</p>
+  } @else if (prodotti$ | async; as prodotti) {
+    @if (prodotti.length > 0) {
+      <div class="griglia-prodotti">
+        @for (prodotto of prodotti; track prodotto.id) {
+          <app-prodotto-card [prodotto]="prodotto"></app-prodotto-card>
+        }
+      </div>
+    } @else {
+      <p class="stato-messaggio">Nessun prodotto trovato con i filtri selezionati.</p>
+    }
   }
-</div>
+</section>
