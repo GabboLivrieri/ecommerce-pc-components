@@ -1,5 +1,21 @@
-<div class="card" style="border: 1px solid #ccc; padding: 15px; margin: 10px; border-radius: 8px;">
-  <h3>{{ prodotto.nome }}</h3>
-  <p>{{ prodotto.descrizione }}</p>
-  <span><strong>Prezzo:</strong> {{ prodotto.prezzo }}€</span>
-</div>
+<article class="product-card">
+  <div class="product-image">
+    <span class="product-icon">{{ iconaCategoria }}</span>
+  </div>
+
+  <div class="product-info">
+    @if (prodotto.categoria.nome) {
+      <span class="product-category">{{ prodotto.categoria.nome }}</span>
+    }
+
+    <h3 class="product-name">{{ prodotto.nome }}</h3>
+    <p class="product-description">{{ prodotto.descrizione }}</p>
+
+    <div class="product-footer">
+      <span class="product-price">{{ prodotto.prezzo | number:'1.2-2' }} €</span>
+      <span class="product-stock" [class.out-of-stock]="!disponibile">
+        {{ disponibile ? 'Disponibile' : 'Esaurito' }}
+      </span>
+    </div>
+  </div>
+</article>

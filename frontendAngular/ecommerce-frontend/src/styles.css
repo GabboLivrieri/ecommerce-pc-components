@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --color-primary: #5b5bf0;
+  --color-primary-dark: #4342d8;
+  --color-accent: #22d3b6;
+  --color-bg: #f5f6fb;
+  --color-surface: #ffffff;
+  --color-text: #1c1e2b;
+  --color-text-muted: #666a80;
+  --color-border: #e5e6f0;
+  --shadow-soft: 0 8px 24px rgba(28, 30, 43, 0.08);
+  --shadow-hover: 0 16px 32px rgba(28, 30, 43, 0.14);
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
