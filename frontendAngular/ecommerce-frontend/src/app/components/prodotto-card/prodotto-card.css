@@ -8,6 +8,7 @@
   box-shadow: var(--shadow-soft, 0 8px 24px rgba(28, 30, 43, 0.08));
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 260px;
+  cursor: pointer;
 }
 
 .product-card:hover {

@@ -1,0 +1,52 @@
+<section class="dettaglio-wrapper">
+
+  <a routerLink="/catalogo" class="link-indietro">← Torna al catalogo</a>
+
+  @if (caricamento) {
+    <p class="stato-messaggio">Caricamento prodotto in corso...</p>
+  } @else if (errore) {
+    <p class="stato-messaggio">Non è stato possibile trovare questo prodotto.</p>
+  } @else if (prodotto) {
+    <div class="dettaglio-card">
+
+      <div class="dettaglio-immagine">
+        <span class="dettaglio-icona">{{ iconaCategoria }}</span>
+      </div>
+
+      <div class="dettaglio-info">
+        @if (prodotto.categoria?.nome) {
+          <span class="dettaglio-categoria">{{ prodotto.categoria.nome }}</span>
+        }
+
+        <h1 class="dettaglio-nome">{{ prodotto.nome }}</h1>
+
+        <p class="dettaglio-descrizione">{{ prodotto.descrizione }}</p>
+
+        @if (prodotto.venditore?.nomeAzienda) {
+          <p class="dettaglio-venditore">Venduto da <strong>{{ prodotto.venditore?.nomeAzienda }}</strong></p>
+        }
+
+        <div class="dettaglio-prezzo-riga">
+          <span class="dettaglio-prezzo">{{ prodotto.prezzo | number:'1.2-2' }} €</span>
+          <span class="dettaglio-stock" [class.out-of-stock]="!disponibile">
+            {{ disponibile ? 'Disponibile (' + prodotto.quantita + ' pz)' : 'Esaurito' }}
+          </span>
+        </div>
+
+        @if (disponibile) {
+          <div class="dettaglio-azioni">
+            <div class="selettore-quantita">
+              <button type="button" (click)="decrementaQuantita()" [disabled]="quantitaSelezionata <= 1">−</button>
+              <span>{{ quantitaSelezionata }}</span>
+              <button type="button" (click)="incrementaQuantita()" [disabled]="quantitaSelezionata >= prodotto.quantita">+</button>
+            </div>
+
+            <button type="button" class="btn-primary">Aggiungi al carrello</button>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</section>
