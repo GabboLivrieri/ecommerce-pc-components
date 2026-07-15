@@ -1,0 +1,66 @@
+<section class="auth-wrapper">
+  <div class="auth-card">
+    <h1>Crea un account</h1>
+    <p class="auth-sottotitolo">Registrati come cliente per acquistare, o come venditore per mettere in vendita i tuoi componenti.</p>
+
+    @if (errore) {
+      <p class="auth-errore">{{ errore }}</p>
+    }
+
+    <form #regForm="ngForm" (ngSubmit)="registrati()">
+
+      <div class="selettore-ruolo">
+        @for (r of ruoli; track r) {
+          <button
+            type="button"
+            class="ruolo-btn"
+            [class.attivo]="dati.ruolo === r"
+            (click)="dati.ruolo = r"
+          >
+            {{ r === 'CLIENTE' ? '🧑 Cliente' : '🏪 Venditore' }}
+          </button>
+        }
+      </div>
+
+      <div class="form-grid">
+        <label class="campo">
+          <span>Nome</span>
+          <input [(ngModel)]="dati.nome" name="nome" required>
+        </label>
+
+        <label class="campo">
+          <span>Cognome</span>
+          <input [(ngModel)]="dati.cognome" name="cognome" required>
+        </label>
+
+        <label class="campo campo-full">
+          <span>Email</span>
+          <input type="email" [(ngModel)]="dati.email" name="email" required>
+        </label>
+
+        <label class="campo campo-full">
+          <span>Password</span>
+          <input type="password" [(ngModel)]="dati.password" name="password" required minlength="6">
+        </label>
+
+        <label class="campo">
+          <span>Telefono</span>
+          <input [(ngModel)]="dati.telefono" name="telefono" placeholder="Es. 333 1234567" required>
+        </label>
+
+        @if (isCliente) {
+          <label class="campo">
+            <span>Indirizzo</span>
+            <input [(ngModel)]="dati.indirizzo" name="indirizzo" placeholder="Via, numero civico" required>
+          </label>
+        }
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="invioInCorso || regForm.invalid">
+        {{ invioInCorso ? 'Registrazione in corso...' : 'Registrati' }}
+      </button>
+    </form>
+
+    <p class="auth-link">Hai già un account? <a routerLink="/login">Accedi</a></p>
+  </div>
+</section>

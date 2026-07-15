@@ -1,21 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ValutazioneVenditore } from '../models/valutazioneVenditore.models';
+import { Utente } from '../models/utente.models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ValutazioneVenditoreService {
-  private apiUrl = 'http://localhost:8080/api/valutazioni/venditore';
+export class UtenteService {
+
+  private apiUrl = 'http://localhost:8080/api/utenti';
 
   constructor(private http: HttpClient) {}
 
-  getValutazioniVenditore(idVenditore: number): Observable<ValutazioneVenditore[]> {
-    return this.http.get<ValutazioneVenditore[]>(`${this.apiUrl}/${idVenditore}`);
+  getUtenti(): Observable<Utente[]> {
+    return this.http.get<Utente[]>(this.apiUrl);
   }
 
-  recensisciVenditore(vv: ValutazioneVenditore): Observable<ValutazioneVenditore> {
-    return this.http.post<ValutazioneVenditore>(this.apiUrl, vv);
+  getUtenteById(id: number): Observable<Utente> {
+    return this.http.get<Utente>(`${this.apiUrl}/${id}`);
   }
+
+  modificaUtente(id: number, dati: any): Observable<Utente> {
+    return this.http.put<Utente>(`${this.apiUrl}/${id}`, dati);
+  }
+
 }

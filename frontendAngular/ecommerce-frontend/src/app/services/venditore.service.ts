@@ -22,4 +22,8 @@ export class VenditoreService {
   addVenditore(venditore: Venditore): Observable<Venditore> {
     return this.http.post<Venditore>(this.apiUrl, venditore);
   }
+  
+  modificaVenditore(id: number, dati: any): Observable<Venditore> {
+  return this.http.put<Venditore>(`${this.apiUrl}/${id}`, dati);
+}
 }

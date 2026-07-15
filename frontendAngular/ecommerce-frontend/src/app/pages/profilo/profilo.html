@@ -1,0 +1,147 @@
+@if (utente; as u) {
+
+  <div class="profilo-card">
+
+    <h1>Il mio profilo</h1>
+
+    <div class="dati">
+
+      <p>
+        <strong>Nome:</strong>
+        {{ u.nome }}
+      </p>
+
+      <p>
+        <strong>Cognome:</strong>
+        {{ u.cognome }}
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        {{ u.email }}
+      </p>
+
+      <p>
+        <strong>Ruolo:</strong>
+        {{ u.ruolo }}
+      </p>
+
+    </div>
+
+  </div>
+
+  <button class="btn-primary" (click)="abilitaModifica()">
+    Modifica profilo
+  </button>
+
+  @if (modifica) {
+
+  <form class="dati" [formGroup]="formProfilo" (ngSubmit)="salvaModifica()">
+
+    <label>
+      Nome:
+      <input formControlName="nome">
+    </label>
+
+
+    <label>
+      Cognome:
+      <input formControlName="cognome">
+    </label>
+
+
+    <label>
+      Email:
+      <input type="email" formControlName="email">
+    </label>
+
+
+    <label>
+      Nuova password:
+      <input type="password" formControlName="password">
+    </label>
+
+    @if (cliente) {
+
+  <hr>
+
+  <h2>Dati cliente</h2>
+
+  <form class="dati" [formGroup]="formCliente" (ngSubmit)="salvaCliente()">
+
+    <label>
+      Telefono:
+      <input formControlName="telefono">
+    </label>
+
+
+    <label>
+      Indirizzo:
+      <input formControlName="indirizzo">
+    </label>
+
+
+    <label>
+      Città:
+      <input formControlName="citta">
+    </label>
+
+
+    <label>
+      CAP:
+      <input formControlName="cap">
+    </label>
+
+
+    <button class="btn-primary" type="submit">
+      Salva dati cliente
+    </button>
+
+  </form>
+
+}
+
+@if (venditore) {
+
+  <hr>
+
+  <h2>Dati venditore</h2>
+
+
+  <form class="dati" [formGroup]="formVenditore" (ngSubmit)="salvaVenditore()">
+
+    <label>
+      Nome azienda:
+      <input formControlName="nomeAzienda">
+    </label>
+
+
+    <label>
+      Partita IVA:
+      <input formControlName="partitaIva">
+    </label>
+
+
+    <label>
+      Telefono:
+      <input formControlName="telefono">
+    </label>
+
+
+    <button class="btn-primary" type="submit">
+      Salva dati venditore
+    </button>
+
+  </form>
+
+}
+
+    <button class="btn-primary" type="submit" [disabled]="formProfilo.invalid">
+      Salva modifiche
+    </button>
+
+  </form>
+
+}
+
+}

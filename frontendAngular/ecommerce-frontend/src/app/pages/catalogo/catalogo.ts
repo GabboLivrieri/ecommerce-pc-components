@@ -20,7 +20,7 @@ interface Filtri {
   templateUrl: './catalogo.html',
   styleUrl: './catalogo.css'
 })
-export class CatalogoComponent implements OnInit {
+export class Catalogo implements OnInit {
 
   categorie: Categoria[] = [];
   caricamento = true;
