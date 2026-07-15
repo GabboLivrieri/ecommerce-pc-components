@@ -4,6 +4,7 @@
     PC E-Commerce
   </a>
 
+
   <div class="nav-links">
 
     <a routerLink="/home" class="nav-item">
@@ -19,6 +20,16 @@
 
       <a routerLink="/profilo" class="nav-item">
         Il mio profilo
+      </a>
+
+    } @else {
+
+      <a routerLink="/login" class="nav-item">
+        Login
+      </a>
+
+      <a routerLink="/registrazione" class="nav-item">
+        Registrati
       </a>
 
     }

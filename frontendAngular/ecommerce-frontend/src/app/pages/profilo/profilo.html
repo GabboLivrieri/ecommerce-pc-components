@@ -34,6 +34,11 @@
     Modifica profilo
   </button>
 
+   <button class="btn-logout" (click)="logout()">
+      Logout
+    </button>
+
+
   @if (modifica) {
 
   <form class="dati" [formGroup]="formProfilo" (ngSubmit)="salvaModifica()">

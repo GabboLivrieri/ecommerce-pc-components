@@ -5,8 +5,9 @@ import { Login } from './pages/login/login';
 import { Registrazione } from './pages/registrazione/registrazione';
 import { Profilo } from './pages/profilo/profilo';
 
+
 export const routes: Routes = [
-  { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'catalogo', component: Catalogo },
   { path: 'home', component: Home},
   { path: 'login', component: Login },
