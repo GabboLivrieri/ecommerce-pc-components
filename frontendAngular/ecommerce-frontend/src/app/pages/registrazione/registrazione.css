@@ -1,0 +1,130 @@
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 60px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e5e6f0);
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-soft, 0 8px 24px rgba(28, 30, 43, 0.08));
+  padding: 32px;
+}
+
+.auth-card h1 {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  color: var(--color-text, #1c1e2b);
+}
+
+.auth-sottotitolo {
+  margin: 0 0 20px;
+  color: var(--color-text-muted, #666a80);
+  font-size: 0.9rem;
+}
+
+.auth-errore {
+  background-color: rgba(224, 85, 85, 0.1);
+  color: #e05555;
+  padding: 10px 14px;
+  border-radius: var(--radius-md, 12px);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.selettore-ruolo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ruolo-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--color-border, #e5e6f0);
+  border-radius: var(--radius-md, 12px);
+  background-color: var(--color-bg, #f5f6fb);
+  color: var(--color-text-muted, #666a80);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ruolo-btn.attivo {
+  background-color: var(--color-primary, #5b5bf0);
+  border-color: var(--color-primary, #5b5bf0);
+  color: #fff;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #666a80);
+}
+
+.campo-full {
+  grid-column: 1 / -1;
+}
+
+.campo input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e5e6f0);
+  border-radius: var(--radius-md, 12px);
+  font-size: 0.9rem;
+  color: var(--color-text, #1c1e2b);
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--color-primary, #5b5bf0);
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: var(--color-primary, #5b5bf0);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark, #4342d8);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-link {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #666a80);
+}
+
+.auth-link a {
+  color: var(--color-primary, #5b5bf0);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}

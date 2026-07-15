@@ -1,7 +1,29 @@
 <nav class="navbar">
-  <a routerLink="/" class="nav-logo">PC E-Commerce</a>
+
+  <a routerLink="/" class="nav-logo">
+    PC E-Commerce
+  </a>
+
   <div class="nav-links">
-    <a routerLink="/home" class="nav-item">Home</a>
-    <a routerLink="/catalogo" class="nav-item">Catalogo Componenti</a>
+
+    <a routerLink="/home" class="nav-item">
+      Home
+    </a>
+
+    <a routerLink="/catalogo" class="nav-item">
+      Catalogo Componenti
+    </a>
+
+
+    @if (authService.utenteCorrente) {
+
+      <a routerLink="/profilo" class="nav-item">
+        Il mio profilo
+      </a>
+
+    }
+
+
   </div>
+
 </nav>

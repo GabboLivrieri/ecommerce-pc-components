@@ -8,6 +8,7 @@ import com.betacom.ecommerce.model.Utente;
 import com.betacom.ecommerce.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.betacom.ecommerce.dto.ModificaUtenteDTO;
 
 @RestController
 @RequestMapping("/api/utenti")
@@ -61,4 +62,33 @@ public class UtenteController {
 
         return risposta;
     }
+
+    @PutMapping("/{id}")
+public UtenteRispostaDTO modificaUtente(
+        @PathVariable Integer id,
+        @RequestBody ModificaUtenteDTO dto) {
+
+    Utente utente = utenteRepository.findById(id)
+            .orElseThrow(() -> new BadRequestException("Utente non trovato."));
+
+    utente.setNome(dto.getNome());
+    utente.setCognome(dto.getCognome());
+    utente.setEmail(dto.getEmail());
+
+    if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+        utente.setPassword(dto.getPassword());
+    }
+
+    Utente salvato = utenteRepository.save(utente);
+
+    UtenteRispostaDTO risposta = new UtenteRispostaDTO();
+
+    risposta.setId(salvato.getId());
+    risposta.setNome(salvato.getNome());
+    risposta.setCognome(salvato.getCognome());
+    risposta.setEmail(salvato.getEmail());
+    risposta.setRuolo(salvato.getRuolo());
+
+    return risposta;
+}
 }

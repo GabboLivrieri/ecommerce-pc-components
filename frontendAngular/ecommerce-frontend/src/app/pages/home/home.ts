@@ -12,7 +12,7 @@ import { Prodotto } from '../../models/prodotto.models';
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class HomeComponent implements OnInit {
+export class Home implements OnInit {
   prodottiInEvidenza: Prodotto[] = [];
   caricamento = true;
   errore = false;

@@ -1,0 +1,30 @@
+<section class="auth-wrapper">
+  <div class="auth-card">
+    <h1>Accedi</h1>
+    <p class="auth-sottotitolo">Inserisci le tue credenziali per accedere al tuo account.</p>
+
+    @if (errore) {
+      <p class="auth-errore">{{ errore }}</p>
+    }
+
+    <form #loginForm="ngForm" (ngSubmit)="accedi()">
+      <div class="form-grid">
+        <label class="campo campo-full">
+          <span>Email</span>
+          <input type="email" [(ngModel)]="dati.email" name="email" required>
+        </label>
+
+        <label class="campo campo-full">
+          <span>Password</span>
+          <input type="password" [(ngModel)]="dati.password" name="password" required>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="invioInCorso || loginForm.invalid">
+        {{ invioInCorso ? 'Accesso in corso...' : 'Accedi' }}
+      </button>
+    </form>
+
+    <p class="auth-link">Non hai un account? <a routerLink="/registrazione">Registrati</a></p>
+  </div>
+</section>
