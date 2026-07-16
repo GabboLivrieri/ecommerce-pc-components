@@ -1,0 +1,82 @@
+<section class="carrello-wrapper">
+
+  <div class="carrello-card">
+
+    <h1>Il mio carrello</h1>
+
+
+    @if (prodotti.length > 0) {
+
+
+      @for (item of prodotti; track item.id) {
+
+
+        <div class="prodotto-carrello">
+
+
+          <div class="info-prodotto">
+
+            <h2>
+              {{ item.prodotto.nome }}
+            </h2>
+
+            <p>
+              {{ item.prodotto.descrizione }}
+            </p>
+
+            <p>
+              Quantità:
+              {{ item.quantita }}
+            </p>
+
+
+            <p>
+              Prezzo:
+              {{ item.prodotto.prezzo | number:'1.2-2' }} €
+            </p>
+
+
+          </div>
+
+
+          <button
+            class="btn-delete"
+            (click)="rimuovi(item.id)"
+          >
+            Rimuovi
+          </button>
+
+
+        </div>
+
+
+      }
+
+
+      <hr>
+
+
+      <div class="totale">
+
+        <strong>
+          Totale:
+        </strong>
+
+        {{ totale() | number:'1.2-2' }} €
+
+      </div>
+
+
+    }
+    @else {
+
+      <p>
+        Il carrello è vuoto.
+      </p>
+
+    }
+
+
+  </div>
+
+</section>

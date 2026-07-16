@@ -1,0 +1,38 @@
+.carrello-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+
+.carrello-card {
+  width: 800px;
+  padding: 30px;
+  border-radius: 15px;
+  background: white;
+}
+
+
+.prodotto-carrello {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+
+.info-prodotto h2 {
+  margin: 0;
+}
+
+
+.btn-delete {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+
+.totale {
+  text-align: right;
+  font-size: 22px;
+}
