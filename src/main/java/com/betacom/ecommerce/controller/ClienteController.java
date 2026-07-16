@@ -2,7 +2,10 @@ package com.betacom.ecommerce.controller;
 
 import com.betacom.ecommerce.dto.ModificaClienteDTO;
 import com.betacom.ecommerce.model.Cliente;
+import com.betacom.ecommerce.model.Carrello;
 import com.betacom.ecommerce.repository.ClienteRepository;
+import com.betacom.ecommerce.repository.CarrelloRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +17,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private CarrelloRepository carrelloRepository;
 
 
     @GetMapping
@@ -30,7 +36,20 @@ public class ClienteController {
 
     @PostMapping
     public Cliente saveCliente(@RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+        System.out.println("CREAZIONE CLIENTE");
+        System.out.println(cliente.getUtente().getId());
+
+        Cliente salvato = clienteRepository.save(cliente);
+
+
+        Carrello carrello = new Carrello();
+        carrello.setUtente(salvato.getUtente());
+
+        carrelloRepository.save(carrello);
+        System.out.println("CREATO CARRELLO");
+
+
+        return salvato;
     }
 
 

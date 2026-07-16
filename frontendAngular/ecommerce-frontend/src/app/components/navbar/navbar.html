@@ -16,23 +16,27 @@
     </a>
 
 
-    @if (authService.utenteCorrente) {
+   @if (authService.utenteCorrente) {
 
-      <a routerLink="/profilo" class="nav-item">
-        Il mio profilo
-      </a>
+  <a routerLink="/carrello" class="nav-item">
+    Carrello
+  </a>
 
-    } @else {
+  <a routerLink="/profilo" class="nav-item">
+    Il mio profilo
+  </a>
 
-      <a routerLink="/login" class="nav-item">
-        Login
-      </a>
+} @else {
 
-      <a routerLink="/registrazione" class="nav-item">
-        Registrati
-      </a>
+  <a routerLink="/login" class="nav-item">
+    Login
+  </a>
 
-    }
+  <a routerLink="/registrazione" class="nav-item">
+    Registrati
+  </a>
+
+}
 
 
   </div>

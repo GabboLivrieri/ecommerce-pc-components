@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Utente } from '../models/utente.models';
 import { RegistrazioneRequest } from '../models/registrazione.model';
 import { LoginRequest } from '../models/login.model';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 
 const CHIAVE_STORAGE = 'utenteCorrente';
 
@@ -16,7 +18,7 @@ export class AuthService {
   private utenteCorrenteSubject = new BehaviorSubject<Utente | null>(this.caricaDaStorage());
   utenteCorrente$ = this.utenteCorrenteSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   get utenteCorrente(): Utente | null {
     return this.utenteCorrenteSubject.value;
@@ -43,13 +45,24 @@ export class AuthService {
   }
 
   private caricaDaStorage(): Utente | null {
-    try {
-      const dati = localStorage.getItem(CHIAVE_STORAGE);
-      return dati ? JSON.parse(dati) : null;
-    } catch {
-      return null;
-    }
+
+  if (!isPlatformBrowser(this.platformId)) {
+    return null;
   }
+
+  try {
+
+    const dati = localStorage.getItem(CHIAVE_STORAGE);
+
+    return dati ? JSON.parse(dati) : null;
+
+  } catch {
+
+    return null;
+
+  }
+
+}
 
   private salvaSuStorage(utente: Utente): void {
     try {
