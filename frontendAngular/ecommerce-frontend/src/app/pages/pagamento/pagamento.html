@@ -1,0 +1,39 @@
+<section class="pagamento-wrapper">
+
+  <div class="pagamento-card">
+
+    <h1>
+      Pagamento
+    </h1>
+
+
+    <label>
+      Metodo pagamento
+    </label>
+
+
+    <select [(ngModel)]="metodo">
+
+      <option>
+        Carta
+      </option>
+
+      <option>
+        PayPal
+      </option>
+
+      <option>
+        Bonifico
+      </option>
+
+    </select>
+
+
+    <button (click)="paga()">
+      Conferma pagamento
+    </button>
+
+
+  </div>
+
+</section>
