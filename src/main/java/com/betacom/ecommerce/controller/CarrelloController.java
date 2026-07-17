@@ -24,6 +24,22 @@ public class CarrelloController {
     public CarrelloProdotto aggiungiAlCarrello(@RequestBody CarrelloProdotto cp) {
         return carrelloProdottoRepository.save(cp);
     }
+    @PutMapping("/{id}")
+public CarrelloProdotto aggiornaQuantita(
+        @PathVariable Integer id,
+        @RequestBody CarrelloProdotto dto
+) {
+
+    CarrelloProdotto cp = carrelloProdottoRepository.findById(id).orElse(null);
+
+    if (cp == null) {
+        return null;
+    }
+
+    cp.setQuantita(dto.getQuantita());
+
+    return carrelloProdottoRepository.save(cp);
+}
 
     @DeleteMapping("/{id}")
     public void rimuoviDalCarrello(@PathVariable Integer id) {
