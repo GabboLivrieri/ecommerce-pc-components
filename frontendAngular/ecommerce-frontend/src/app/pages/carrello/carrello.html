@@ -4,15 +4,11 @@
 
     <h1>Il mio carrello</h1>
 
-
     @if (prodotti.length > 0) {
-
 
       @for (item of prodotti; track item.id) {
 
-
         <div class="prodotto-carrello">
-
 
           <div class="info-prodotto">
 
@@ -25,36 +21,43 @@
             </p>
 
             <p>
-              Quantità:
-              {{ item.quantita }}
-            </p>
-
-
-            <p>
               Prezzo:
               {{ item.prodotto.prezzo | number:'1.2-2' }} €
             </p>
 
+            <div class="quantita">
+
+              <button
+                class="btn-quantita"
+                (click)="diminuisci(item)">
+                -
+              </button>
+
+              <span>
+                {{ item.quantita }}
+              </span>
+
+              <button
+                class="btn-quantita"
+                (click)="aumenta(item)">
+                +
+              </button>
+
+            </div>
 
           </div>
 
-
           <button
             class="btn-delete"
-            (click)="rimuovi(item.id)"
-          >
+            (click)="rimuovi(item.id)">
             Rimuovi
           </button>
 
-
         </div>
-
 
       }
 
-
       <hr>
-
 
       <div class="totale">
 
@@ -66,6 +69,9 @@
 
       </div>
 
+      <button class="btn-primary">
+        Procedi all'ordine
+      </button>
 
     }
     @else {
@@ -75,7 +81,6 @@
       </p>
 
     }
-
 
   </div>
 

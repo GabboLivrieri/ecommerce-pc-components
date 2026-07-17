@@ -19,7 +19,6 @@ export class Carrello implements OnInit {
 
   idCarrello?: number;
 
-
   constructor(
     private authService: AuthService,
     private carrelloService: CarrelloService,
@@ -27,17 +26,14 @@ export class Carrello implements OnInit {
     private router: Router
   ) {}
 
-
   ngOnInit(): void {
 
     const utente = this.authService.utenteCorrente;
-
 
     if (!utente?.id) {
       this.router.navigateByUrl('/login');
       return;
     }
-
 
     this.carrelloService
       .getCarrelloUtente(utente.id)
@@ -47,9 +43,7 @@ export class Carrello implements OnInit {
           return;
         }
 
-
         this.idCarrello = carrello.id;
-
 
         this.carrelloProdottoService
           .getProdottiCarrello(carrello.id)
@@ -63,7 +57,6 @@ export class Carrello implements OnInit {
 
   }
 
-
   totale(): number {
 
     return this.prodotti.reduce(
@@ -74,20 +67,57 @@ export class Carrello implements OnInit {
 
   }
 
-
   rimuovi(id?: number): void {
 
     if (!id) {
       return;
     }
 
-
     this.carrelloProdottoService
       .rimuoviDalCarrello(id)
       .subscribe(() => {
 
-        this.prodotti =
-          this.prodotti.filter(p => p.id !== id);
+        this.prodotti = this.prodotti.filter(p => p.id !== id);
+
+      });
+
+  }
+
+  aumenta(item: CarrelloProdotto): void {
+
+    if (!item.id) {
+      return;
+    }
+
+    this.carrelloProdottoService
+      .aggiornaQuantita(item.id, item.quantita + 1)
+      .subscribe(risposta => {
+
+        item.quantita = risposta.quantita;
+
+      });
+
+  }
+
+  diminuisci(item: CarrelloProdotto): void {
+
+    if (!item.id) {
+      return;
+    }
+
+    if (item.quantita === 1) {
+
+      this.rimuovi(item.id);
+
+      return;
+
+    }
+
+    this.carrelloProdottoService
+      .aggiornaQuantita(item.id, item.quantita - 1)
+      .subscribe(risposta => {
+
+        item.quantita = risposta.quantita;
 
       });
 

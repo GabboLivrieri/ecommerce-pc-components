@@ -25,4 +25,15 @@ export class CarrelloProdottoService {
   rimuoviDalCarrello(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  aggiornaQuantita(id: number, quantita: number) {
+
+  return this.http.put<CarrelloProdotto>(
+    `${this.apiUrl}/${id}`,
+    {
+      quantita: quantita
+    }
+  );
+
+}
 }
