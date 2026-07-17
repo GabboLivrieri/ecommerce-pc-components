@@ -70,4 +70,14 @@ export class Ordini implements OnInit {
 
   }
 
+  pagaOrdine(id?: number): void {
+
+  if (!id) {
+    return;
+  }
+
+  this.router.navigateByUrl(`/pagamento/${id}`);
+
+}
+
 }

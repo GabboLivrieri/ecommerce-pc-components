@@ -5,33 +5,29 @@ import { CarrelloService } from '../../services/carrello.service';
 import { CarrelloProdottoService } from '../../services/carrelloProdotto.service';
 import { CarrelloProdotto } from '../../models/carrelloProdotto.models';
 import { Router } from '@angular/router';
-import { OrdineService } from '../../services/ordine.service';
+import { PagamentoService } from '../../services/pagamento.service';
 
 @Component({
   selector: 'app-carrello',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './carrello.html',
-  styleUrl: './carrello.css'
+  styleUrl: './carrello.css',
 })
 export class Carrello implements OnInit {
-
   prodotti: CarrelloProdotto[] = [];
 
   idCarrello?: number;
-
 
   constructor(
     private authService: AuthService,
     private carrelloService: CarrelloService,
     private carrelloProdottoService: CarrelloProdottoService,
-    private ordineService: OrdineService,
-    private router: Router
+    private pagamentoService: PagamentoService,
+    private router: Router,
   ) {}
 
-
   ngOnInit(): void {
-
     const utente = this.authService.utenteCorrente;
 
     if (!utente?.id) {
@@ -39,136 +35,69 @@ export class Carrello implements OnInit {
       return;
     }
 
+    this.carrelloService.getCarrelloUtente(utente.id).subscribe((carrello) => {
+      if (!carrello?.id) {
+        return;
+      }
 
-    this.carrelloService
-      .getCarrelloUtente(utente.id)
-      .subscribe(carrello => {
+      this.idCarrello = carrello.id;
 
-        if (!carrello?.id) {
-          return;
-        }
-
-
-        this.idCarrello = carrello.id;
-
-
-        this.carrelloProdottoService
-          .getProdottiCarrello(carrello.id)
-          .subscribe(prodotti => {
-
-            this.prodotti = prodotti;
-
-          });
-
+      this.carrelloProdottoService.getProdottiCarrello(carrello.id).subscribe((prodotti) => {
+        this.prodotti = prodotti;
       });
-
+    });
   }
-
 
   totale(): number {
-
     return this.prodotti.reduce(
-      (totale, elemento) =>
-        totale + (elemento.prodotto.prezzo * elemento.quantita),
-      0
+      (totale, elemento) => totale + elemento.prodotto.prezzo * elemento.quantita,
+      0,
     );
-
   }
 
-
   rimuovi(id?: number): void {
-
     if (!id) {
       return;
     }
 
-
-    this.carrelloProdottoService
-      .rimuoviDalCarrello(id)
-      .subscribe(() => {
-
-        this.prodotti = this.prodotti.filter(p => p.id !== id);
-
-      });
-
+    this.carrelloProdottoService.rimuoviDalCarrello(id).subscribe(() => {
+      this.prodotti = this.prodotti.filter((p) => p.id !== id);
+    });
   }
 
-
   aumenta(item: CarrelloProdotto): void {
-
     if (!item.id) {
       return;
     }
-
 
     this.carrelloProdottoService
       .aggiornaQuantita(item.id, item.quantita + 1)
-      .subscribe(risposta => {
-
+      .subscribe((risposta) => {
         item.quantita = risposta.quantita;
-
       });
-
   }
 
-
   diminuisci(item: CarrelloProdotto): void {
-
     if (!item.id) {
       return;
     }
 
-
     if (item.quantita === 1) {
-
       this.rimuovi(item.id);
 
       return;
-
     }
-
 
     this.carrelloProdottoService
       .aggiornaQuantita(item.id, item.quantita - 1)
-      .subscribe(risposta => {
-
+      .subscribe((risposta) => {
         item.quantita = risposta.quantita;
-
       });
-
   }
 
 
-  procediOrdine(): void {
 
-    const utente = this.authService.utenteCorrente;
-
-
-    if (!utente?.id) {
-      return;
-    }
-
-
-    this.ordineService
-      .creaOrdineDaCarrello(utente.id)
-      .subscribe({
-
-        next: () => {
-
-          this.prodotti = [];
-
-          this.router.navigateByUrl('/ordini');
-
-        },
-
-        error: errore => {
-
-          console.error(errore);
-
-        }
-
-      });
-
+  vaiAlPagamento(): void {
+    this.router.navigateByUrl('/pagamento');
   }
-
 }
