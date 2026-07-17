@@ -7,15 +7,38 @@ import { Ordine } from '../models/ordine.models';
   providedIn: 'root'
 })
 export class OrdineService {
+
   private apiUrl = 'http://localhost:8080/api/ordini';
 
   constructor(private http: HttpClient) {}
 
+
   creaOrdine(ordine: Ordine): Observable<Ordine> {
-    return this.http.post<Ordine>(this.apiUrl, ordine);
+
+    return this.http.post<Ordine>(
+      this.apiUrl,
+      ordine
+    );
+
   }
 
-  getOrdiniUtente(idUtente: number): Observable<Ordine[]> {
-    return this.http.get<Ordine[]>(`${this.apiUrl}/utente/${idUtente}`);
+
+  creaOrdineDaCarrello(idUtente: number): Observable<Ordine> {
+
+    return this.http.post<Ordine>(
+      `${this.apiUrl}/crea/${idUtente}`,
+      {}
+    );
+
   }
+
+
+  getOrdiniUtente(idUtente: number): Observable<Ordine[]> {
+
+    return this.http.get<Ordine[]>(
+      `${this.apiUrl}/utente/${idUtente}`
+    );
+
+  }
+
 }

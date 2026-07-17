@@ -5,6 +5,7 @@ import { CarrelloService } from '../../services/carrello.service';
 import { CarrelloProdottoService } from '../../services/carrelloProdotto.service';
 import { CarrelloProdotto } from '../../models/carrelloProdotto.models';
 import { Router } from '@angular/router';
+import { OrdineService } from '../../services/ordine.service';
 
 @Component({
   selector: 'app-carrello',
@@ -19,12 +20,15 @@ export class Carrello implements OnInit {
 
   idCarrello?: number;
 
+
   constructor(
     private authService: AuthService,
     private carrelloService: CarrelloService,
     private carrelloProdottoService: CarrelloProdottoService,
+    private ordineService: OrdineService,
     private router: Router
   ) {}
+
 
   ngOnInit(): void {
 
@@ -35,6 +39,7 @@ export class Carrello implements OnInit {
       return;
     }
 
+
     this.carrelloService
       .getCarrelloUtente(utente.id)
       .subscribe(carrello => {
@@ -43,7 +48,9 @@ export class Carrello implements OnInit {
           return;
         }
 
+
         this.idCarrello = carrello.id;
+
 
         this.carrelloProdottoService
           .getProdottiCarrello(carrello.id)
@@ -57,6 +64,7 @@ export class Carrello implements OnInit {
 
   }
 
+
   totale(): number {
 
     return this.prodotti.reduce(
@@ -67,11 +75,13 @@ export class Carrello implements OnInit {
 
   }
 
+
   rimuovi(id?: number): void {
 
     if (!id) {
       return;
     }
+
 
     this.carrelloProdottoService
       .rimuoviDalCarrello(id)
@@ -83,11 +93,13 @@ export class Carrello implements OnInit {
 
   }
 
+
   aumenta(item: CarrelloProdotto): void {
 
     if (!item.id) {
       return;
     }
+
 
     this.carrelloProdottoService
       .aggiornaQuantita(item.id, item.quantita + 1)
@@ -99,11 +111,13 @@ export class Carrello implements OnInit {
 
   }
 
+
   diminuisci(item: CarrelloProdotto): void {
 
     if (!item.id) {
       return;
     }
+
 
     if (item.quantita === 1) {
 
@@ -113,11 +127,45 @@ export class Carrello implements OnInit {
 
     }
 
+
     this.carrelloProdottoService
       .aggiornaQuantita(item.id, item.quantita - 1)
       .subscribe(risposta => {
 
         item.quantita = risposta.quantita;
+
+      });
+
+  }
+
+
+  procediOrdine(): void {
+
+    const utente = this.authService.utenteCorrente;
+
+
+    if (!utente?.id) {
+      return;
+    }
+
+
+    this.ordineService
+      .creaOrdineDaCarrello(utente.id)
+      .subscribe({
+
+        next: () => {
+
+          this.prodotti = [];
+
+          this.router.navigateByUrl('/ordini');
+
+        },
+
+        error: errore => {
+
+          console.error(errore);
+
+        }
 
       });
 

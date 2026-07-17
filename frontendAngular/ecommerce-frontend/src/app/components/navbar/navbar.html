@@ -11,32 +11,45 @@
       Home
     </a>
 
+
     <a routerLink="/catalogo" class="nav-item">
       Catalogo Componenti
     </a>
 
 
-   @if (authService.utenteCorrente) {
 
-  <a routerLink="/carrello" class="nav-item">
-    Carrello
-  </a>
+    @if (authService.utenteCorrente) {
 
-  <a routerLink="/profilo" class="nav-item">
-    Il mio profilo
-  </a>
 
-} @else {
+      <a routerLink="/carrello" class="nav-item">
+        Carrello
+      </a>
 
-  <a routerLink="/login" class="nav-item">
-    Login
-  </a>
 
-  <a routerLink="/registrazione" class="nav-item">
-    Registrati
-  </a>
+      <a routerLink="/ordini" class="nav-item">
+        I miei ordini
+      </a>
 
-}
+
+      <a routerLink="/profilo" class="nav-item">
+        Il mio profilo
+      </a>
+
+
+    } @else {
+
+
+      <a routerLink="/login" class="nav-item">
+        Login
+      </a>
+
+
+      <a routerLink="/registrazione" class="nav-item">
+        Registrati
+      </a>
+
+
+    }
 
 
   </div>
