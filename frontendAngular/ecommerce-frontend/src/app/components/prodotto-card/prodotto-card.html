@@ -1,7 +1,9 @@
 <article class="product-card">
   <div class="product-image">
-    <span class="product-icon">{{ iconaCategoria }}</span>
+    <img [src]="'data:image/jpeg;base64,' + prodotto.immagine">
   </div>
+
+  
 
   <div class="product-info">
     @if (prodotto.categoria.nome) {

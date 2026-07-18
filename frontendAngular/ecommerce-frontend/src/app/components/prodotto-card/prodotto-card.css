@@ -88,3 +88,17 @@
 .product-stock.out-of-stock {
   color: #e05555;
 }
+.product-image {
+  width: 100%;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

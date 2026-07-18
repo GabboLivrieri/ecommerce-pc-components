@@ -1,8 +1,14 @@
 package com.betacom.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "carrello")
 public class Carrello {
     @Id
@@ -12,24 +18,5 @@ public class Carrello {
     @ManyToOne
     @JoinColumn(name = "id_utente", nullable = false)
     private Utente utente;
-    
-    
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Utente getUtente() {
-		return utente;
-	}
-
-	public void setUtente(Utente utente) {
-		this.utente = utente;
-	}
-
    
 }

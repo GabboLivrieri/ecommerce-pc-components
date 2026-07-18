@@ -1,8 +1,14 @@
 package com.betacom.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "valutazione_venditore")
 public class ValutazioneVenditore {
     @Id
@@ -23,47 +29,5 @@ public class ValutazioneVenditore {
     @Column(columnDefinition = "TEXT")
     private String commento;
     
-    
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Venditore getVenditore() {
-		return venditore;
-	}
-
-	public void setVenditore(Venditore venditore) {
-		this.venditore = venditore;
-	}
-
-	public Utente getUtente() {
-		return utente;
-	}
-
-	public void setUtente(Utente utente) {
-		this.utente = utente;
-	}
-
-	public Integer getVoto() {
-		return voto;
-	}
-
-	public void setVoto(Integer voto) {
-		this.voto = voto;
-	}
-
-	public String getCommento() {
-		return commento;
-	}
-
-	public void setCommento(String commento) {
-		this.commento = commento;
-	}
-
     
 }

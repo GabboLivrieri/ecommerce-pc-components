@@ -1,9 +1,16 @@
 package com.betacom.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "ordine_prodotto")
 public class OrdineProdotto {
     @Id
@@ -24,45 +31,4 @@ public class OrdineProdotto {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal prezzo;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Ordine getOrdine() {
-		return ordine;
-	}
-
-	public void setOrdine(Ordine ordine) {
-		this.ordine = ordine;
-	}
-
-	public Prodotto getProdotto() {
-		return prodotto;
-	}
-
-	public void setProdotto(Prodotto prodotto) {
-		this.prodotto = prodotto;
-	}
-
-	public Integer getQuantita() {
-		return quantita;
-	}
-
-	public void setQuantita(Integer quantita) {
-		this.quantita = quantita;
-	}
-
-	public BigDecimal getPrezzo() {
-		return prezzo;
-	}
-
-	public void setPrezzo(BigDecimal prezzo) {
-		this.prezzo = prezzo;
-	}
-
-    
 }
