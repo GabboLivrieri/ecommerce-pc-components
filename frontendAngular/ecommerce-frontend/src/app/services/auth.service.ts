@@ -10,15 +10,27 @@ import { PLATFORM_ID } from '@angular/core';
 const CHIAVE_STORAGE = 'utenteCorrente';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/utenti';
 
-  private utenteCorrenteSubject = new BehaviorSubject<Utente | null>(this.caricaDaStorage());
+  private utenteCorrenteSubject = new BehaviorSubject<Utente | null>(null);
+
   utenteCorrente$ = this.utenteCorrenteSubject.asObservable();
 
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      const utente = this.caricaDaStorage();
+
+      if (utente) {
+        this.utenteCorrenteSubject.next(utente);
+      }
+    }
+  }
 
   get utenteCorrente(): Utente | null {
     return this.utenteCorrenteSubject.value;
@@ -30,54 +42,43 @@ export class AuthService {
 
   login(dati: LoginRequest): Observable<Utente> {
     return this.http.post<Utente>(`${this.apiUrl}/login`, dati).pipe(
-      tap((utente) => this.impostaUtenteCorrente(utente))
+      tap((utente) => {
+        this.impostaUtenteCorrente(utente);
+      }),
     );
   }
 
   logout(): void {
     this.utenteCorrenteSubject.next(null);
+
     this.rimuoviDaStorage();
   }
 
   impostaUtenteCorrente(utente: Utente): void {
     this.utenteCorrenteSubject.next(utente);
+
     this.salvaSuStorage(utente);
   }
 
   private caricaDaStorage(): Utente | null {
+    try {
+      const dati = localStorage.getItem(CHIAVE_STORAGE);
 
-  if (!isPlatformBrowser(this.platformId)) {
-    return null;
+      return dati ? JSON.parse(dati) : null;
+    } catch {
+      return null;
+    }
   }
-
-  try {
-
-    const dati = localStorage.getItem(CHIAVE_STORAGE);
-
-    return dati ? JSON.parse(dati) : null;
-
-  } catch {
-
-    return null;
-
-  }
-
-}
 
   private salvaSuStorage(utente: Utente): void {
     try {
       localStorage.setItem(CHIAVE_STORAGE, JSON.stringify(utente));
-    } catch {
-      // Se il salvataggio fallisce l'utente resta comunque loggato in memoria
-      // per la sessione corrente.
-    }
+    } catch {}
   }
 
   private rimuoviDaStorage(): void {
     try {
       localStorage.removeItem(CHIAVE_STORAGE);
-    } catch {
-      // Nessuna azione necessaria: se lo storage non è disponibile non c'è nulla da rimuovere.
-    }
+    } catch {}
   }
 }

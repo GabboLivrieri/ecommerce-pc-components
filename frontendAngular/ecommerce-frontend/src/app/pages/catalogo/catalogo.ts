@@ -7,10 +7,12 @@ import { CategoriaService } from '../../services/categoria.service';
 import { ProdottoCardComponent } from '../../components/prodotto-card/prodotto-card';
 import { Prodotto } from '../../models/prodotto.models';
 import { Categoria } from '../../models/categoria.models';
+import { AuthService } from '../../services/auth.service';
 
 interface Filtri {
   ricerca: string;
   categoriaId: number | null;
+  ordinamento: string;
 }
 
 @Component({
@@ -18,7 +20,7 @@ interface Filtri {
   standalone: true,
   imports: [CommonModule, FormsModule, ProdottoCardComponent],
   templateUrl: './catalogo.html',
-  styleUrl: './catalogo.css'
+  styleUrl: './catalogo.css',
 })
 export class Catalogo implements OnInit {
 
@@ -28,103 +30,363 @@ export class Catalogo implements OnInit {
   mostraForm = false;
   invioInCorso = false;
 
+
   private prodottiSubject = new BehaviorSubject<Prodotto[]>([]);
-  private filtriSubject = new BehaviorSubject<Filtri>({ ricerca: '', categoriaId: null });
 
-  // Legato al form dei filtri tramite ngModel
-  filtri: Filtri = { ricerca: '', categoriaId: null };
+  private filtriSubject = new BehaviorSubject<Filtri>({
+    ricerca: '',
+    categoriaId: null,
+    ordinamento: '',
+  });
 
-  // Stream reattivo: si aggiorna sia quando arrivano nuovi prodotti sia quando cambiano i filtri
-  prodotti$ = combineLatest([this.prodottiSubject, this.filtriSubject]).pipe(
+
+  filtri: Filtri = {
+    ricerca: '',
+    categoriaId: null,
+    ordinamento: '',
+  };
+
+
+  prodotti$ = combineLatest([
+    this.prodottiSubject,
+    this.filtriSubject
+  ]).pipe(
     map(([prodotti, filtri]) => this.filtraProdotti(prodotti, filtri))
   );
 
+
+
   nuovoProdotto = {
+
     nome: '',
     descrizione: '',
     prezzo: 0,
     quantita: 1,
-    immagine: ''
+    immagine: null as File | null
+
   };
+
+
   categoriaFormId: number | null = null;
+
+
 
   constructor(
     private prodottoService: ProdottoService,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    public authService: AuthService,
   ) {}
 
+
+
   ngOnInit(): void {
+
     this.caricaProdotti();
 
+
     this.categoriaService.getCategorie().subscribe({
+
       next: (categorie) => this.categorie = categorie,
-      error: (err) => console.error('Errore nel caricamento delle categorie:', err)
+
+      error: (err) => console.error(
+        'Errore nel caricamento delle categorie:',
+        err
+      )
+
     });
+
   }
+
+
 
   private caricaProdotti(): void {
+
     this.caricamento = true;
+
+
     this.prodottoService.getProdotti().subscribe({
+
       next: (prodotti) => {
+
         this.prodottiSubject.next(prodotti);
+
         this.caricamento = false;
+
       },
+
+
       error: (err) => {
-        console.error('Errore nel caricamento dei prodotti:', err);
+
+        console.error(
+          'Errore nel caricamento dei prodotti:',
+          err
+        );
+
         this.caricamento = false;
+
         this.errore = true;
+
       }
+
     });
+
   }
+
+
 
   aggiornaFiltri(): void {
-    this.filtriSubject.next({ ...this.filtri });
+
+    this.filtriSubject.next({
+      ...this.filtri
+    });
+
   }
 
-  private filtraProdotti(prodotti: Prodotto[], filtri: Filtri): Prodotto[] {
-    const ricerca = filtri.ricerca.trim().toLowerCase();
 
-    return prodotti.filter((prodotto) => {
-      const corrispondeRicerca = !ricerca ||
+
+  private filtraProdotti(
+    prodotti: Prodotto[],
+    filtri: Filtri
+  ): Prodotto[] {
+
+
+    const ricerca = filtri.ricerca
+      .trim()
+      .toLowerCase();
+
+
+
+    let risultato = prodotti.filter((prodotto) => {
+
+
+      const corrispondeRicerca =
+        !ricerca ||
         prodotto.nome.toLowerCase().includes(ricerca) ||
-        (prodotto.descrizione ?? '').toLowerCase().includes(ricerca);
+        (prodotto.descrizione ?? '')
+          .toLowerCase()
+          .includes(ricerca);
 
-      const corrispondeCategoria = !filtri.categoriaId || prodotto.categoria?.id === filtri.categoriaId;
+
+
+      const corrispondeCategoria =
+        !filtri.categoriaId ||
+        prodotto.categoria?.id === filtri.categoriaId;
+
+
 
       return corrispondeRicerca && corrispondeCategoria;
+
     });
-  }
 
-  toggleForm(): void {
-    this.mostraForm = !this.mostraForm;
-  }
 
-  inviaProdotto(): void {
-    const categoria = this.categorie.find(c => c.id === this.categoriaFormId);
 
-    if (!this.nuovoProdotto.nome || this.nuovoProdotto.prezzo <= 0 || !categoria) {
-      return;
+    switch (filtri.ordinamento) {
+
+
+      case 'prezzo-crescente':
+
+        risultato.sort((a,b)=>a.prezzo-b.prezzo);
+
+        break;
+
+
+
+      case 'prezzo-decrescente':
+
+        risultato.sort((a,b)=>b.prezzo-a.prezzo);
+
+        break;
+
+
+
+      case 'nome':
+
+        risultato.sort((a,b)=>a.nome.localeCompare(b.nome));
+
+        break;
+
+
+
+      case 'nome-desc':
+
+        risultato.sort((a,b)=>b.nome.localeCompare(a.nome));
+
+        break;
+
     }
 
-    const prodotto: Prodotto = { ...this.nuovoProdotto, categoria };
+
+
+    return risultato;
+
+  }
+
+
+
+
+  toggleForm(): void {
+
+    this.mostraForm = !this.mostraForm;
+
+  }
+
+
+
+
+  selezionaImmagine(event: Event): void {
+
+
+    const input = event.target as HTMLInputElement;
+
+
+    if (input.files && input.files.length > 0) {
+
+      this.nuovoProdotto.immagine = input.files[0];
+
+    }
+
+  }
+
+
+
+
+
+  inviaProdotto(): void {
+
+
+    const categoria = this.categorie.find(
+      c => c.id === this.categoriaFormId
+    );
+
+
+    if (
+      !this.nuovoProdotto.nome ||
+      this.nuovoProdotto.prezzo <= 0 ||
+      !categoria ||
+      !this.nuovoProdotto.immagine
+    ) {
+
+      return;
+
+    }
+
+
+
+    const formData = new FormData();
+
+
+
+    formData.append(
+      'idUtente',
+      this.authService.utenteCorrente!.id!.toString()
+    );
+
+
+    formData.append(
+      'nome',
+      this.nuovoProdotto.nome
+    );
+
+
+    formData.append(
+      'descrizione',
+      this.nuovoProdotto.descrizione
+    );
+
+
+    formData.append(
+      'prezzo',
+      this.nuovoProdotto.prezzo.toString()
+    );
+
+
+    formData.append(
+      'quantita',
+      this.nuovoProdotto.quantita.toString()
+    );
+
+
+    formData.append(
+      'idCategoria',
+      categoria.id!.toString()
+    );
+
+
+    formData.append(
+      'immagine',
+      this.nuovoProdotto.immagine
+    );
+
+
 
     this.invioInCorso = true;
-    this.prodottoService.addProdotto(prodotto).subscribe({
-      next: () => {
-        this.resetForm();
-        this.caricaProdotti();
-        this.invioInCorso = false;
-        this.mostraForm = false;
-      },
-      error: (err) => {
-        console.error('Errore nell\'aggiunta del prodotto:', err);
-        this.invioInCorso = false;
-      }
-    });
+
+
+
+    this.prodottoService
+      .addProdotto(formData)
+      .subscribe({
+
+
+        next: () => {
+
+          this.resetForm();
+
+          this.caricaProdotti();
+
+          this.invioInCorso = false;
+
+          this.mostraForm = false;
+
+        },
+
+
+        error: (err) => {
+
+          console.error(
+            "Errore nell'aggiunta del prodotto:",
+            err
+          );
+
+          this.invioInCorso = false;
+
+        }
+
+      });
+
+
   }
 
+
+
+
   private resetForm(): void {
-    this.nuovoProdotto = { nome: '', descrizione: '', prezzo: 0, quantita: 1, immagine: '' };
+
+    this.nuovoProdotto = {
+
+      nome: '',
+
+      descrizione: '',
+
+      prezzo: 0,
+
+      quantita: 1,
+
+      immagine: null
+
+    };
+
+
     this.categoriaFormId = null;
+
   }
+
+
+
+  get puoAggiungereProdotti(): boolean {
+
+    return this.authService.utenteCorrente?.ruolo === 'VENDITORE';
+
+  }
+
 }

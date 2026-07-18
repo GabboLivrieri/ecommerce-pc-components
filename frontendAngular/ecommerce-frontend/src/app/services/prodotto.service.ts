@@ -7,23 +7,53 @@ import { Prodotto } from '../models/prodotto.models';
   providedIn: 'root'
 })
 export class ProdottoService {
+
   private apiUrl = 'http://localhost:8080/api/prodotti';
+
 
   constructor(private http: HttpClient) {}
 
+
+
   getProdotti(): Observable<Prodotto[]> {
-    return this.http.get<Prodotto[]>(this.apiUrl);
+
+    return this.http.get<Prodotto[]>(
+      this.apiUrl
+    );
+
   }
+
+
 
   getProdottoById(id: number): Observable<Prodotto> {
-    return this.http.get<Prodotto>(`${this.apiUrl}/${id}`);
+
+    return this.http.get<Prodotto>(
+      `${this.apiUrl}/${id}`
+    );
+
   }
 
-  addProdotto(prodotto: Prodotto): Observable<Prodotto> {
-    return this.http.post<Prodotto>(this.apiUrl, prodotto);
+
+
+  addProdotto(
+    prodotto: FormData
+  ): Observable<Prodotto> {
+
+    return this.http.post<Prodotto>(
+      this.apiUrl,
+      prodotto
+    );
+
   }
+
+
 
   deleteProdotto(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`
+    );
+
   }
+
 }

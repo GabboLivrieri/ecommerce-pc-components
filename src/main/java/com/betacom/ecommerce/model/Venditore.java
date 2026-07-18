@@ -1,8 +1,14 @@
 package com.betacom.ecommerce.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "venditore")
 public class Venditore {
     @Id
@@ -22,43 +28,4 @@ public class Venditore {
     @Column(length = 20)
     private String telefono;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Utente getUtente() {
-		return utente;
-	}
-
-	public void setUtente(Utente utente) {
-		this.utente = utente;
-	}
-
-	public String getNomeAzienda() {
-		return nomeAzienda;
-	}
-
-	public void setNomeAzienda(String nomeAzienda) {
-		this.nomeAzienda = nomeAzienda;
-	}
-
-	public String getPartitaIva() {
-		return partitaIva;
-	}
-
-	public void setPartitaIva(String partitaIva) {
-		this.partitaIva = partitaIva;
-	}
-
-	public String getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
 }
