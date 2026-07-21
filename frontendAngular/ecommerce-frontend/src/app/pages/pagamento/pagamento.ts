@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { PagamentoService } from '../../services/pagamento.service';
-import { AuthService } from '../../services/auth.service';
+import { Pagamento } from '../../models/pagamento.models';
 
 
 @Component({
@@ -13,37 +14,82 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './pagamento.html',
   styleUrl: './pagamento.css'
 })
-export class PagamentoComponent {
+export class PagamentoComponent implements OnInit {
 
 
   metodo: string = 'Carta';
 
+  pagamento?: Pagamento;
+
 
   constructor(
     private pagamentoService: PagamentoService,
-    private authService: AuthService,
     private router: Router
   ) {}
+
+
+
+  ngOnInit(): void {
+
+
+    const idOrdine = history.state.idOrdine;
+
+
+    if (!idOrdine) {
+
+      this.router.navigateByUrl('/carrello');
+
+      return;
+
+    }
+
+
+
+    this.pagamentoService
+      .getPagamentoOrdine(idOrdine)
+      .subscribe({
+
+        next: (pagamento) => {
+
+          this.pagamento = pagamento;
+
+        },
+
+
+        error: errore => {
+
+          console.error(
+            'Errore caricamento pagamento:',
+            errore
+          );
+
+        }
+
+      });
+
+
+  }
+
 
 
 
   paga(): void {
 
 
-    const utente = this.authService.utenteCorrente;
+    if (!this.pagamento?.id) {
 
-
-    if (!utente?.id) {
       return;
+
     }
 
 
 
+    this.pagamento.metodo = this.metodo;
+
+
+
     this.pagamentoService
-      .creaPagamentoDaCarrello(
-        utente.id,
-        this.metodo
-      )
+      .confermaPagamento(this.pagamento.id, this.metodo)
       .subscribe({
 
         next: () => {
@@ -55,14 +101,15 @@ export class PagamentoComponent {
 
         error: errore => {
 
-          console.error(errore);
+          console.error(
+            'Errore pagamento:',
+            errore
+          );
 
         }
 
       });
 
-
   }
-
 
 }
