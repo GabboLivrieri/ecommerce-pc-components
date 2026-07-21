@@ -39,83 +39,137 @@ export class ProdottoCardComponent {
   ) {}
 
 
+
   get iconaCategoria(): string {
+
     const nomeCategoria = this.prodotto?.categoria?.nome;
-    return (nomeCategoria && this.iconePerCategoria[nomeCategoria]) || '🔧';
+
+    return (nomeCategoria && this.iconePerCategoria[nomeCategoria])
+      || '🔧';
+
   }
+
 
 
   get disponibile(): boolean {
+
     return (this.prodotto?.quantita ?? 0) > 0;
+
   }
 
 
- aggiungiAlCarrello(): void {
 
-  const utente = this.authService.utenteCorrente;
+  get puoModificare(): boolean {
+
+    const utente = this.authService.utenteCorrente;
 
 
-  if (!utente?.id || !this.prodotto.id) {
-    return;
+    return (
+      utente?.ruolo === 'VENDITORE' &&
+      utente.id === this.prodotto.venditore?.utente?.id
+    );
+
   }
 
 
-  this.carrelloService
-    .getCarrelloUtente(utente.id)
-    .subscribe(carrello => {
+
+  aggiungiAlCarrello(): void {
+
+    const utente = this.authService.utenteCorrente;
 
 
-      if (!carrello) {
-
-        this.carrelloService
-          .creaCarrello(utente.id!)
-          .subscribe(nuovoCarrello => {
-
-            this.salvaProdottoCarrello(nuovoCarrello.id!);
-
-          });
-
-        return;
-      }
+    if (!utente?.id || !this.prodotto.id) {
+      return;
+    }
 
 
-      this.salvaProdottoCarrello(carrello.id!);
-
-    });
-
-}
+    this.carrelloService
+      .getCarrelloUtente(utente.id)
+      .subscribe(carrello => {
 
 
-private salvaProdottoCarrello(idCarrello: number): void {
-
-  const carrelloProdotto: CarrelloProdotto = {
-
-    carrello: {
-      id: idCarrello,
-      utente: this.authService.utenteCorrente!
-    },
-
-    prodotto: this.prodotto,
-
-    quantita: 1
-
-  };
+        if (!carrello) {
 
 
-  this.carrelloProdottoService
-    .aggiungiAlCarrello(carrelloProdotto)
-    .subscribe({
+          this.carrelloService
+            .creaCarrello(utente.id!)
+            .subscribe(nuovoCarrello => {
 
-      next: () => {
-        console.log('Prodotto aggiunto al carrello');
+              this.salvaProdottoCarrello(nuovoCarrello.id!);
+
+            });
+
+
+          return;
+
+        }
+
+
+        this.salvaProdottoCarrello(carrello.id!);
+
+      });
+
+  }
+
+
+
+  private salvaProdottoCarrello(idCarrello: number): void {
+
+
+    const carrelloProdotto: CarrelloProdotto = {
+
+
+      carrello: {
+        id: idCarrello,
+        utente: this.authService.utenteCorrente!
       },
 
-      error: errore => {
-        console.error(errore);
-      }
 
-    });
+      prodotto: this.prodotto,
 
-}
+
+      quantita: 1
+
+    };
+
+
+    this.carrelloProdottoService
+      .aggiungiAlCarrello(carrelloProdotto)
+      .subscribe({
+
+        next: () => {
+          console.log('Prodotto aggiunto al carrello');
+        },
+
+
+        error: errore => {
+          console.error(errore);
+        }
+
+      });
+
+  }
+
+
+
+  elimina(): void {
+
+    const utente = this.authService.utenteCorrente;
+
+
+    if (!utente?.id || !this.prodotto.id) {
+      return;
+    }
+
+
+    if (!confirm('Eliminare questo prodotto?')) {
+      return;
+    }
+
+
+    window.location.reload();
+
+  }
+
 
 }
