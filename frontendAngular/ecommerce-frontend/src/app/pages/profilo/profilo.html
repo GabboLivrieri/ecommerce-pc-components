@@ -1,72 +1,72 @@
 @if (utente; as u) {
 
-  <div class="profilo-card">
+<div class="profilo-card">
 
-    <h1>Il mio profilo</h1>
+  <h1>Il mio profilo</h1>
 
-    <div class="dati">
+  <div class="dati">
 
-      <p>
-        <strong>Nome:</strong>
-        {{ u.nome }}
-      </p>
+    <p>
+      <strong>Nome:</strong>
+      {{ u.nome }}
+    </p>
 
-      <p>
-        <strong>Cognome:</strong>
-        {{ u.cognome }}
-      </p>
+    <p>
+      <strong>Cognome:</strong>
+      {{ u.cognome }}
+    </p>
 
-      <p>
-        <strong>Email:</strong>
-        {{ u.email }}
-      </p>
+    <p>
+      <strong>Email:</strong>
+      {{ u.email }}
+    </p>
 
-      <p>
-        <strong>Ruolo:</strong>
-        {{ u.ruolo }}
-      </p>
-
-    </div>
+    <p>
+      <strong>Ruolo:</strong>
+      {{ u.ruolo }}
+    </p>
 
   </div>
 
-  <button class="btn-primary" (click)="abilitaModifica()">
-    Modifica profilo
-  </button>
+</div>
 
-   <button class="btn-logout" (click)="logout()">
-      Logout
-    </button>
+<button class="btn-primary" (click)="abilitaModifica()">
+  Modifica profilo
+</button>
 
-
-  @if (modifica) {
-
-  <form class="dati" [formGroup]="formProfilo" (ngSubmit)="salvaModifica()">
-
-    <label>
-      Nome:
-      <input formControlName="nome">
-    </label>
+<button class="btn-logout" (click)="logout()">
+  Logout
+</button>
 
 
-    <label>
-      Cognome:
-      <input formControlName="cognome">
-    </label>
+@if (modifica) {
+
+<form class="dati" [formGroup]="formProfilo" (ngSubmit)="salvaModifica()">
+
+  <label>
+    Nome:
+    <input formControlName="nome">
+  </label>
 
 
-    <label>
-      Email:
-      <input type="email" formControlName="email">
-    </label>
+  <label>
+    Cognome:
+    <input formControlName="cognome">
+  </label>
 
 
-    <label>
-      Nuova password:
-      <input type="password" formControlName="password">
-    </label>
+  <label>
+    Email:
+    <input type="email" formControlName="email">
+  </label>
 
-    @if (cliente) {
+
+  <label>
+    Nuova password:
+    <input type="password" formControlName="password">
+  </label>
+
+  @if (cliente) {
 
   <hr>
 
@@ -104,9 +104,9 @@
 
   </form>
 
-}
+  }
 
-@if (venditore) {
+  @if (venditore) {
 
   <hr>
 
@@ -139,14 +139,64 @@
 
   </form>
 
+  
+
+  }
+
+  <button class="btn-primary" type="submit" [disabled]="formProfilo.invalid">
+    Salva modifiche
+  </button>
+
+</form>
+
+
+
 }
+<hr>
 
-    <button class="btn-primary" type="submit" [disabled]="formProfilo.invalid">
-      Salva modifiche
-    </button>
+  <h2>I miei prodotti in vendita</h2>
 
-  </form>
 
-}
+  @if (prodottiVenduti.length > 0) {
+
+
+  @for (prodotto of prodottiVenduti; track prodotto.id) {
+
+
+  <div class="prodotto-venduto">
+
+    <h3>
+      {{ prodotto.nome }}
+    </h3>
+
+
+    <p>
+      Prezzo:
+      {{ prodotto.prezzo | number:'1.2-2' }} €
+    </p>
+
+
+    <p>
+      Quantità:
+      {{ prodotto.quantita }}
+    </p>
+
+
+  </div>
+
+
+  }
+
+
+  } @else {
+
+
+  <p>
+    Non hai ancora inserito prodotti.
+  </p>
+
+
+  }
+
 
 }
