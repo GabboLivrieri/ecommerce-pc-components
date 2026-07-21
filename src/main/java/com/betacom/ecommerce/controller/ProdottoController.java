@@ -18,23 +18,19 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/prodotti")
 public class ProdottoController {
 
-        @Autowired
-        private ProdottoRepository prodottoRepository;
 
-        @Autowired
-        private UtenteRepository utenteRepository;
+    @Autowired
+    private ProdottoRepository prodottoRepository;
 
-        @Autowired
-        private VenditoreRepository venditoreRepository;
 
-        @GetMapping
-        public List<Prodotto> getAllProdotti() {
+    @Autowired
+    private UtenteRepository utenteRepository;
 
-                return prodottoRepository.findAll();
 
     @Autowired
     private VenditoreRepository venditoreRepository;
@@ -62,16 +58,33 @@ public class ProdottoController {
 
 
 
+    @GetMapping("/venditore/{idVenditore}")
+    public List<Prodotto> getProdottiVenditore(
+            @PathVariable Integer idVenditore
+    ) {
+
+        return prodottoRepository.findByVenditoreId(idVenditore);
+
+    }
+
+
+
     @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     public Prodotto saveProdotto(
 
             @RequestParam Integer idUtente,
+
             @RequestParam String nome,
+
             @RequestParam String descrizione,
+
             @RequestParam BigDecimal prezzo,
+
             @RequestParam Integer quantita,
+
             @RequestParam Integer idCategoria,
+
             @RequestParam MultipartFile immagine
 
     ) throws IOException {
@@ -80,9 +93,7 @@ public class ProdottoController {
         Utente utente = utenteRepository.findById(idUtente)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
-        @GetMapping("/{id}")
-        public Prodotto getProdottoById(
-                        @PathVariable Integer id) {
+
 
         if (utente.getRuolo() != Ruolo.VENDITORE) {
 
@@ -91,7 +102,9 @@ public class ProdottoController {
         }
 
 
+
         Venditore venditore = venditoreRepository.findByUtente(utente);
+
 
 
         if (venditore == null) {
@@ -104,147 +117,77 @@ public class ProdottoController {
 
         Prodotto prodotto = new Prodotto();
 
-        }
-
-        @PostMapping(consumes = "multipart/form-data")
-        @ResponseStatus(HttpStatus.CREATED)
-        public Prodotto saveProdotto(
-
-                        @RequestParam Integer idUtente,
-                        @RequestParam String nome,
-                        @RequestParam String descrizione,
-                        @RequestParam BigDecimal prezzo,
-                        @RequestParam Integer quantita,
-                        @RequestParam Integer idCategoria,
-                        @RequestParam MultipartFile immagine
-
-        ) throws IOException {
-
-                Utente utente = utenteRepository.findById(idUtente)
-                                .orElse(null);
-
-                if (utente == null) {
-                        throw new RuntimeException("Utente non trovato");
-                }
-
-                if (utente.getRuolo() != Ruolo.VENDITORE) {
-                        throw new RuntimeException("Non autorizzato");
-                }
-
-                Venditore venditore = venditoreRepository.findByUtente(utente);
-
-                Prodotto prodotto = new Prodotto();
-
-                prodotto.setNome(nome);
-
-                prodotto.setDescrizione(descrizione);
-
-                prodotto.setPrezzo(prezzo);
-
-                prodotto.setQuantita(quantita);
-
-                Categoria categoria = new Categoria();
-
-                categoria.setId(idCategoria);
-
-                prodotto.setCategoria(categoria);
-
-                prodotto.setVenditore(venditore);
-
-                prodotto.setImmagine(
-                                immagine.getBytes());
-
-                return prodottoRepository.save(prodotto);
-
-        }
-
-        @PutMapping(value = "/{id}", consumes = "multipart/form-data")
-        public Prodotto modificaProdotto(
-
-                        @PathVariable Integer id,
-
-                        @RequestParam Integer idUtente,
-                        @RequestParam String nome,
-                        @RequestParam String descrizione,
-                        @RequestParam BigDecimal prezzo,
-                        @RequestParam Integer quantita,
-                        @RequestParam Integer idCategoria,
-
-                        @RequestParam(required = false) MultipartFile immagine
-
-        ) throws IOException {
-
-                Prodotto prodotto = prodottoRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
-
-                Utente utente = utenteRepository.findById(idUtente)
-                                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
-
-        if (venditore == null) {
-
-            throw new RuntimeException("Venditore non trovato");
-
-        }
-
-
-        if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
-
-                if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
-
-                        throw new RuntimeException("Non autorizzato");
-
-                }
-
 
         prodotto.setNome(nome);
 
-                prodotto.setDescrizione(descrizione);
+        prodotto.setDescrizione(descrizione);
 
-                prodotto.setPrezzo(prezzo);
+        prodotto.setPrezzo(prezzo);
 
-                prodotto.setQuantita(quantita);
+        prodotto.setQuantita(quantita);
 
-                Categoria categoria = new Categoria();
 
 
         Categoria categoria = new Categoria();
 
-                prodotto.setCategoria(categoria);
+        categoria.setId(idCategoria);
 
-                if (immagine != null && !immagine.isEmpty()) {
+        prodotto.setCategoria(categoria);
 
-                        prodotto.setImmagine(
-                                        immagine.getBytes());
 
-                }
 
-                return prodottoRepository.save(prodotto);
+        prodotto.setVenditore(venditore);
 
-        }
 
-        @DeleteMapping("/{id}")
-        public void deleteProdotto(
 
-                        @PathVariable Integer id,
-                        @RequestParam Integer idUtente
+        prodotto.setImmagine(
+                immagine.getBytes()
+        );
 
-        ) {
 
-                Prodotto prodotto = prodottoRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
 
-                Utente utente = utenteRepository.findById(idUtente)
-                                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        return prodottoRepository.save(prodotto);
 
-                Venditore venditore = venditoreRepository.findByUtente(utente);
+    }
 
-                if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
 
-                        throw new RuntimeException("Non autorizzato");
 
-                }
+
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public Prodotto modificaProdotto(
+
+            @PathVariable Integer id,
+
+            @RequestParam Integer idUtente,
+
+            @RequestParam String nome,
+
+            @RequestParam String descrizione,
+
+            @RequestParam BigDecimal prezzo,
+
+            @RequestParam Integer quantita,
+
+            @RequestParam Integer idCategoria,
+
+            @RequestParam(required = false) MultipartFile immagine
+
+    ) throws IOException {
+
+
+
+        Prodotto prodotto = prodottoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
+
+
+        Utente utente = utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+
+
 
         Venditore venditore = venditoreRepository.findByUtente(utente);
+
 
 
         if (venditore == null) {
@@ -254,18 +197,94 @@ public class ProdottoController {
         }
 
 
-        if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
+
+        if (!prodotto.getVenditore().getId()
+                .equals(venditore.getId())) {
 
             throw new RuntimeException("Non autorizzato");
 
         }
 
-        @GetMapping("/venditore/{idVenditore}")
-        public List<Prodotto> getProdottiVenditore(
-                        @PathVariable Integer idVenditore) {
 
-                return prodottoRepository.findByVenditoreId(idVenditore);
+
+        prodotto.setNome(nome);
+
+        prodotto.setDescrizione(descrizione);
+
+        prodotto.setPrezzo(prezzo);
+
+        prodotto.setQuantita(quantita);
+
+
+
+        Categoria categoria = new Categoria();
+
+        categoria.setId(idCategoria);
+
+        prodotto.setCategoria(categoria);
+
+
+
+        if (immagine != null && !immagine.isEmpty()) {
+
+            prodotto.setImmagine(
+                    immagine.getBytes()
+            );
 
         }
+
+
+
+        return prodottoRepository.save(prodotto);
+
+    }
+
+
+
+
+    @DeleteMapping("/{id}")
+    public void deleteProdotto(
+
+            @PathVariable Integer id,
+
+            @RequestParam Integer idUtente
+
+    ) {
+
+
+        Prodotto prodotto = prodottoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
+
+
+        Utente utente = utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+
+
+
+        Venditore venditore = venditoreRepository.findByUtente(utente);
+
+
+
+        if (venditore == null) {
+
+            throw new RuntimeException("Venditore non trovato");
+
+        }
+
+
+
+        if (!prodotto.getVenditore().getId()
+                .equals(venditore.getId())) {
+
+            throw new RuntimeException("Non autorizzato");
+
+        }
+
+
+
+        prodottoRepository.deleteById(id);
+
+    }
 
 }
