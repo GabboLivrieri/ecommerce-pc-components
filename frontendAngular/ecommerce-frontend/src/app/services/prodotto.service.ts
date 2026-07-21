@@ -48,10 +48,27 @@ export class ProdottoService {
 
 
 
-  deleteProdotto(id: number): Observable<void> {
+  updateProdotto(
+    id: number,
+    prodotto: FormData
+  ): Observable<Prodotto> {
+
+    return this.http.put<Prodotto>(
+      `${this.apiUrl}/${id}`,
+      prodotto
+    );
+
+  }
+
+
+
+  deleteProdotto(
+    id: number,
+    idUtente: number
+  ): Observable<void> {
 
     return this.http.delete<void>(
-      `${this.apiUrl}/${id}`
+      `${this.apiUrl}/${id}?idUtente=${idUtente}`
     );
 
   }

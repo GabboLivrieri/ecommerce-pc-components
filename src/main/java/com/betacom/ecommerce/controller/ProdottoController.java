@@ -4,8 +4,10 @@ import com.betacom.ecommerce.model.Categoria;
 import com.betacom.ecommerce.model.Prodotto;
 import com.betacom.ecommerce.model.Ruolo;
 import com.betacom.ecommerce.model.Utente;
+import com.betacom.ecommerce.model.Venditore;
 import com.betacom.ecommerce.repository.ProdottoRepository;
 import com.betacom.ecommerce.repository.UtenteRepository;
+import com.betacom.ecommerce.repository.VenditoreRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,10 @@ public class ProdottoController {
 
     @Autowired
     private UtenteRepository utenteRepository;
+
+
+    @Autowired
+    private VenditoreRepository venditoreRepository;
 
 
 
@@ -56,45 +62,98 @@ public class ProdottoController {
     public Prodotto saveProdotto(
 
             @RequestParam Integer idUtente,
-
             @RequestParam String nome,
-
             @RequestParam String descrizione,
-
             @RequestParam BigDecimal prezzo,
-
             @RequestParam Integer quantita,
-
             @RequestParam Integer idCategoria,
-
             @RequestParam MultipartFile immagine
 
     ) throws IOException {
-
 
 
         Utente utente = utenteRepository.findById(idUtente)
                 .orElse(null);
 
 
-
         if (utente == null) {
-
             throw new RuntimeException("Utente non trovato");
-
         }
 
 
-
         if (utente.getRuolo() != Ruolo.VENDITORE) {
+            throw new RuntimeException("Non autorizzato");
+        }
+
+
+        Venditore venditore = venditoreRepository.findByUtente(utente);
+
+
+        Prodotto prodotto = new Prodotto();
+
+        prodotto.setNome(nome);
+
+        prodotto.setDescrizione(descrizione);
+
+        prodotto.setPrezzo(prezzo);
+
+        prodotto.setQuantita(quantita);
+
+
+        Categoria categoria = new Categoria();
+
+        categoria.setId(idCategoria);
+
+        prodotto.setCategoria(categoria);
+
+
+        prodotto.setVenditore(venditore);
+
+
+        prodotto.setImmagine(
+                immagine.getBytes()
+        );
+
+
+        return prodottoRepository.save(prodotto);
+
+    }
+
+
+
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public Prodotto modificaProdotto(
+
+            @PathVariable Integer id,
+
+            @RequestParam Integer idUtente,
+            @RequestParam String nome,
+            @RequestParam String descrizione,
+            @RequestParam BigDecimal prezzo,
+            @RequestParam Integer quantita,
+            @RequestParam Integer idCategoria,
+
+            @RequestParam(required = false) MultipartFile immagine
+
+    ) throws IOException {
+
+
+        Prodotto prodotto = prodottoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
+
+        Utente utente = utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+
+
+        Venditore venditore = venditoreRepository.findByUtente(utente);
+
+
+        if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
 
             throw new RuntimeException("Non autorizzato");
 
         }
-
-
-
-        Prodotto prodotto = new Prodotto();
 
 
         prodotto.setNome(nome);
@@ -106,7 +165,6 @@ public class ProdottoController {
         prodotto.setQuantita(quantita);
 
 
-
         Categoria categoria = new Categoria();
 
         categoria.setId(idCategoria);
@@ -115,10 +173,13 @@ public class ProdottoController {
 
 
 
-        prodotto.setImmagine(
-                immagine.getBytes()
-        );
+        if (immagine != null && !immagine.isEmpty()) {
 
+            prodotto.setImmagine(
+                    immagine.getBytes()
+            );
+
+        }
 
 
         return prodottoRepository.save(prodotto);
@@ -129,8 +190,30 @@ public class ProdottoController {
 
     @DeleteMapping("/{id}")
     public void deleteProdotto(
-            @PathVariable Integer id
+
+            @PathVariable Integer id,
+            @RequestParam Integer idUtente
+
     ) {
+
+
+        Prodotto prodotto = prodottoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
+
+        Utente utente = utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+
+
+        Venditore venditore = venditoreRepository.findByUtente(utente);
+
+
+        if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
+
+            throw new RuntimeException("Non autorizzato");
+
+        }
+
 
         prodottoRepository.deleteById(id);
 
