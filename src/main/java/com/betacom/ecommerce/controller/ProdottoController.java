@@ -36,14 +36,73 @@ public class ProdottoController {
 
                 return prodottoRepository.findAll();
 
-        }
+    @Autowired
+    private VenditoreRepository venditoreRepository;
+
+
+
+    @GetMapping
+    public List<Prodotto> getAllProdotti() {
+
+        return prodottoRepository.findAll();
+
+    }
+
+
+
+    @GetMapping("/{id}")
+    public Prodotto getProdottoById(
+            @PathVariable Integer id
+    ) {
+
+        return prodottoRepository.findById(id)
+                .orElse(null);
+
+    }
+
+
+
+    @PostMapping(consumes = "multipart/form-data")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Prodotto saveProdotto(
+
+            @RequestParam Integer idUtente,
+            @RequestParam String nome,
+            @RequestParam String descrizione,
+            @RequestParam BigDecimal prezzo,
+            @RequestParam Integer quantita,
+            @RequestParam Integer idCategoria,
+            @RequestParam MultipartFile immagine
+
+    ) throws IOException {
+
+
+        Utente utente = utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
         @GetMapping("/{id}")
         public Prodotto getProdottoById(
                         @PathVariable Integer id) {
 
-                return prodottoRepository.findById(id)
-                                .orElse(null);
+        if (utente.getRuolo() != Ruolo.VENDITORE) {
+
+            throw new RuntimeException("Non autorizzato");
+
+        }
+
+
+        Venditore venditore = venditoreRepository.findByUtente(utente);
+
+
+        if (venditore == null) {
+
+            throw new RuntimeException("Venditore non trovato");
+
+        }
+
+
+
+        Prodotto prodotto = new Prodotto();
 
         }
 
@@ -121,7 +180,14 @@ public class ProdottoController {
                 Utente utente = utenteRepository.findById(idUtente)
                                 .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
-                Venditore venditore = venditoreRepository.findByUtente(utente);
+        if (venditore == null) {
+
+            throw new RuntimeException("Venditore non trovato");
+
+        }
+
+
+        if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
 
                 if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
 
@@ -129,7 +195,8 @@ public class ProdottoController {
 
                 }
 
-                prodotto.setNome(nome);
+
+        prodotto.setNome(nome);
 
                 prodotto.setDescrizione(descrizione);
 
@@ -139,7 +206,8 @@ public class ProdottoController {
 
                 Categoria categoria = new Categoria();
 
-                categoria.setId(idCategoria);
+
+        Categoria categoria = new Categoria();
 
                 prodotto.setCategoria(categoria);
 
@@ -176,7 +244,19 @@ public class ProdottoController {
 
                 }
 
-                prodottoRepository.deleteById(id);
+        Venditore venditore = venditoreRepository.findByUtente(utente);
+
+
+        if (venditore == null) {
+
+            throw new RuntimeException("Venditore non trovato");
+
+        }
+
+
+        if (!prodotto.getVenditore().getId().equals(venditore.getId())) {
+
+            throw new RuntimeException("Non autorizzato");
 
         }
 

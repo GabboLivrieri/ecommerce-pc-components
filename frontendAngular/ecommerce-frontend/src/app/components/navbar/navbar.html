@@ -7,6 +7,7 @@
 
   <div class="nav-links">
 
+
     <a routerLink="/home" class="nav-item">
       Home
     </a>
@@ -19,6 +20,18 @@
 
 
     @if (authService.utenteCorrente) {
+
+
+      @if (authService.utenteCorrente.ruolo === 'VENDITORE') {
+
+
+        <a routerLink="/miei-prodotti" class="nav-item">
+          I miei prodotti
+        </a>
+
+
+      }
+
 
 
       <a routerLink="/carrello" class="nav-item">

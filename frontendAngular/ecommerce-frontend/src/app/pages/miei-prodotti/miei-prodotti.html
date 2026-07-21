@@ -1,0 +1,165 @@
+<section class="pagina">
+
+
+<h1>I miei prodotti</h1>
+
+
+@if (caricamento) {
+
+
+<p>
+Caricamento prodotti...
+</p>
+
+
+} @else {
+
+
+<div class="lista">
+
+
+@for (prodotto of prodotti; track prodotto.id) {
+
+
+<article class="card">
+
+
+<h3>
+{{ prodotto.nome }}
+</h3>
+
+
+<p>
+{{ prodotto.descrizione }}
+</p>
+
+
+<p>
+Prezzo: {{ prodotto.prezzo }} €
+</p>
+
+
+<p>
+Quantità: {{ prodotto.quantita }}
+</p>
+
+
+
+<button
+class="btn-primary"
+(click)="apriModifica(prodotto)">
+
+Modifica
+
+</button>
+
+
+
+<button
+class="btn-primary"
+(click)="eliminaProdotto(prodotto.id)">
+
+Elimina
+
+</button>
+
+
+</article>
+
+
+}
+
+
+</div>
+
+
+}
+
+
+
+@if (prodottoModifica) {
+
+
+<section class="form-modifica">
+
+
+<h2>
+Modifica prodotto
+</h2>
+
+
+
+<input
+[(ngModel)]="prodottoModifica.nome"
+placeholder="Nome"
+/>
+
+
+
+<textarea
+[(ngModel)]="prodottoModifica.descrizione">
+</textarea>
+
+
+
+<input
+type="number"
+[(ngModel)]="prodottoModifica.prezzo"
+/>
+
+
+
+<input
+type="number"
+[(ngModel)]="prodottoModifica.quantita"
+/>
+
+
+
+<select
+[(ngModel)]="prodottoModifica.categoria.id">
+
+
+@for (categoria of categorie; track categoria.id) {
+
+
+<option
+[value]="categoria.id">
+
+{{ categoria.nome }}
+
+</option>
+
+
+}
+
+
+</select>
+
+
+
+<input
+type="file"
+accept="image/*"
+(change)="selezionaImmagine($event)"
+/>
+
+
+
+<button
+class="btn-primary"
+(click)="modificaProdotto()">
+
+Salva modifiche
+
+</button>
+
+
+
+</section>
+
+
+}
+
+
+</section>
