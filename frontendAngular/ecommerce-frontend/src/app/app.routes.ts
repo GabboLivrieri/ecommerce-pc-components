@@ -8,6 +8,7 @@ import { authGuard } from './guards/auth.guard';
 import { Carrello } from './pages/carrello/carrello';
 import { Ordini } from './pages/ordini/ordini';
 import { PagamentoComponent } from './pages/pagamento/pagamento';
+import { MieiProdotti } from './pages/miei-prodotti/miei-prodotti';
 
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'profilo', component: Profilo, canActivate: [authGuard] },
   { path: 'carrello', component: Carrello, canActivate: [authGuard] },
   { path: 'ordini', component: Ordini, canActivate: [authGuard] },
-  { path: 'pagamento', component: PagamentoComponent, canActivate: [authGuard] }
+  { path: 'pagamento', component: PagamentoComponent, canActivate: [authGuard] },
+  { path: 'miei-prodotti', component: MieiProdotti, canActivate: [authGuard]}
 
 ];
