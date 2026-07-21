@@ -25,7 +25,7 @@ export class Carrello implements OnInit {
     private carrelloProdottoService: CarrelloProdottoService,
     private pagamentoService: PagamentoService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const utente = this.authService.utenteCorrente;
@@ -98,6 +98,49 @@ export class Carrello implements OnInit {
 
 
   vaiAlPagamento(): void {
-    this.router.navigateByUrl('/pagamento');
+
+    const utente = this.authService.utenteCorrente;
+
+
+    if (!utente?.id) {
+
+      return;
+
+    }
+
+
+
+    this.pagamentoService
+      .checkout(utente.id)
+      .subscribe({
+
+        next: (ordine) => {
+
+
+          this.router.navigate(
+            ['/pagamento'],
+            {
+              state: {
+                idOrdine: ordine.id
+              }
+            }
+          );
+
+
+        },
+
+
+        error: errore => {
+
+          console.error(
+            'Errore checkout:',
+            errore
+          );
+
+        }
+
+      });
+
+
   }
 }

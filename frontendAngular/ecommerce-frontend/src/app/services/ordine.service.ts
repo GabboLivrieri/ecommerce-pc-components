@@ -8,37 +8,39 @@ import { Ordine } from '../models/ordine.models';
 })
 export class OrdineService {
 
+
   private apiUrl = 'http://localhost:8080/api/ordini';
 
-  constructor(private http: HttpClient) {}
 
 
-  creaOrdine(ordine: Ordine): Observable<Ordine> {
-
-    return this.http.post<Ordine>(
-      this.apiUrl,
-      ordine
-    );
-
-  }
+  constructor(
+    private http: HttpClient
+  ) {}
 
 
-  creaOrdineDaCarrello(idUtente: number): Observable<Ordine> {
+
+  checkout(
+    idUtente: number
+  ): Observable<Ordine> {
 
     return this.http.post<Ordine>(
-      `${this.apiUrl}/crea/${idUtente}`,
+      `${this.apiUrl}/checkout/${idUtente}`,
       {}
     );
 
   }
 
 
-  getOrdiniUtente(idUtente: number): Observable<Ordine[]> {
+
+  getOrdiniUtente(
+    idUtente: number
+  ): Observable<Ordine[]> {
 
     return this.http.get<Ordine[]>(
       `${this.apiUrl}/utente/${idUtente}`
     );
 
   }
+
 
 }

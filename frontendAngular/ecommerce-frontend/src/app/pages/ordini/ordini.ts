@@ -76,7 +76,15 @@ export class Ordini implements OnInit {
     return;
   }
 
-  this.router.navigateByUrl(`/pagamento/${id}`);
+
+  this.router.navigate(
+    ['/pagamento'],
+    {
+      state: {
+        idOrdine: id
+      }
+    }
+  );
 
 }
 

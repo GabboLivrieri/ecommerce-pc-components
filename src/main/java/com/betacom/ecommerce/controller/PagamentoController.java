@@ -1,12 +1,11 @@
 package com.betacom.ecommerce.controller;
 
-import com.betacom.ecommerce.model.*;
-import com.betacom.ecommerce.repository.*;
+import com.betacom.ecommerce.model.Pagamento;
+import com.betacom.ecommerce.repository.PagamentoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,134 +13,45 @@ import java.util.List;
 @RequestMapping("/api/pagamenti")
 public class PagamentoController {
 
-    @Autowired
-    private PagamentoRepository pagamentoRepository;
+        @Autowired
+        private PagamentoRepository pagamentoRepository;
 
-    @Autowired
-    private OrdineRepository ordineRepository;
+        @GetMapping
+        public List<Pagamento> getAllPagamenti() {
 
-    @Autowired
-    private CarrelloRepository carrelloRepository;
-
-    @Autowired
-    private CarrelloProdottoRepository carrelloProdottoRepository;
-
-    @Autowired
-    private OrdineProdottoRepository ordineProdottoRepository;
-
-    @Autowired
-    private UtenteRepository utenteRepository;
-
-    @Autowired
-    private ProdottoRepository prodottoRepository;
-
-    @GetMapping
-    public List<Pagamento> getAllPagamenti() {
-
-        return pagamentoRepository.findAll();
-
-    }
-
-    @PostMapping("/crea/{idUtente}")
-    public Pagamento creaPagamento(
-            @PathVariable Integer idUtente,
-            @RequestParam String metodo) {
-
-        Utente utente = utenteRepository.findById(idUtente)
-                .orElse(null);
-
-        if (utente == null) {
-            return null;
-        }
-
-        Carrello carrello = carrelloRepository.findAll()
-                .stream()
-                .filter(c -> c.getUtente().getId().equals(idUtente))
-                .findFirst()
-                .orElse(null);
-
-        if (carrello == null) {
-            return null;
-        }
-
-        List<CarrelloProdotto> prodotti = carrelloProdottoRepository.findAll()
-                .stream()
-                .filter(cp -> cp.getCarrello().getId().equals(carrello.getId()))
-                .toList();
-
-        if (prodotti.isEmpty()) {
-            return null;
-        }
-
-        for (CarrelloProdotto cp : prodotti) {
-
-            if (cp.getProdotto().getQuantita() < cp.getQuantita()) {
-                return null;
-            }
+                return pagamentoRepository.findAll();
 
         }
 
-        Ordine ordine = new Ordine();
+        @GetMapping("/ordine/{idOrdine}")
+        public Pagamento getPagamentoOrdine(
+                        @PathVariable Integer idOrdine) {
 
-        ordine.setUtente(utente);
-        ordine.setDataOrdine(LocalDate.now());
-        ordine.setTotale(BigDecimal.ZERO);
-        ordine.setStato("PAGATO");
-
-        ordine = ordineRepository.save(ordine);
-
-        BigDecimal totale = BigDecimal.ZERO;
-
-        for (CarrelloProdotto cp : prodotti) {
-
-            Prodotto prodotto = cp.getProdotto();
-
-            prodotto.setQuantita(
-                    prodotto.getQuantita() - cp.getQuantita());
-
-            prodottoRepository.save(prodotto);
-
-            OrdineProdotto op = new OrdineProdotto();
-
-            op.setOrdine(ordine);
-            op.setProdotto(prodotto);
-            op.setQuantita(cp.getQuantita());
-            op.setPrezzo(prodotto.getPrezzo());
-
-            ordineProdottoRepository.save(op);
-
-            totale = totale.add(
-                    prodotto.getPrezzo()
-                            .multiply(
-                                    BigDecimal.valueOf(cp.getQuantita())));
+                return pagamentoRepository.findByOrdineId(idOrdine);
 
         }
 
-        ordine.setTotale(totale);
+        @PutMapping("/{id}/conferma")
+        public Pagamento confermaPagamento(
+                        @PathVariable Integer id,
+                        @RequestParam String metodo) {
 
-        ordineRepository.save(ordine);
+                Pagamento pagamento = pagamentoRepository.findById(id)
+                                .orElseThrow(
+                                                () -> new RuntimeException("Pagamento non trovato"));
 
-        Pagamento pagamento = new Pagamento();
+                pagamento.setMetodo(metodo);
 
-        pagamento.setOrdine(ordine);
-        pagamento.setMetodo(metodo);
-        pagamento.setStato("COMPLETATO");
-        pagamento.setDataPagamento(LocalDate.now());
+                pagamento.setStato("COMPLETATO");
 
-        Pagamento risultato = pagamentoRepository.save(pagamento);
+                pagamento.setDataPagamento(
+                                LocalDate.now());
 
-        carrelloProdottoRepository.deleteAll(prodotti);
+                pagamento.getOrdine()
+                                .setStato("PAGATO");
 
-        return risultato;
+                return pagamentoRepository.save(pagamento);
 
-    }
-
-    @GetMapping("/ordine/{idOrdine}")
-    public Pagamento getPagamentoOrdine(
-            @PathVariable Integer idOrdine) {
-
-        return pagamentoRepository.findByOrdineId(idOrdine);
-
-    }
+        }
 
 }
