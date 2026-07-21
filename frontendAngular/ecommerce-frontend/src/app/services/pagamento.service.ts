@@ -8,6 +8,9 @@ import { Pagamento } from '../models/pagamento.models';
   providedIn: 'root'
 })
 export class PagamentoService {
+  checkout(id: number) {
+    throw new Error('Method not implemented.');
+  }
 
 
   private apiUrl = 'http://localhost:8080/api/pagamenti';

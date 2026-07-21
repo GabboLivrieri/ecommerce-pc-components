@@ -11,7 +11,7 @@ export class ProdottoService {
   private apiUrl = 'http://localhost:8080/api/prodotti';
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
 
 
@@ -69,6 +69,14 @@ export class ProdottoService {
 
     return this.http.delete<void>(
       `${this.apiUrl}/${id}?idUtente=${idUtente}`
+    );
+
+  }
+
+  getProdottiVenditore(idVenditore: number): Observable<Prodotto[]> {
+
+    return this.http.get<Prodotto[]>(
+      `${this.apiUrl}/venditore/${idVenditore}`
     );
 
   }
