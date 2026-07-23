@@ -9,5 +9,5 @@ export interface Prodotto {
   quantita: number;
   immagine?: string;
   categoria: Categoria;
-  venditore?: Venditore; //da aggiugere nel backend, altrimenti non si può fare la relazione tra prodotto e venditore 
+  venditore?: Venditore;
 }

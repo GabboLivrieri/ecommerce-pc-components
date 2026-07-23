@@ -4,6 +4,118 @@
 <h1>I miei prodotti</h1>
 
 
+<button
+class="btn-primary"
+(click)="mostraForm = !mostraForm">
+
+@if (mostraForm) {
+Chiudi inserimento
+} @else {
+Aggiungi prodotto
+}
+
+</button>
+
+
+
+@if (mostraForm) {
+
+
+<section class="form-modifica">
+
+
+<h2>
+Nuovo prodotto
+</h2>
+
+
+
+<input
+[(ngModel)]="nuovoProdotto.nome"
+placeholder="Nome"
+/>
+
+
+
+<textarea
+[(ngModel)]="nuovoProdotto.descrizione"
+placeholder="Descrizione">
+</textarea>
+
+
+
+<input
+type="number"
+[(ngModel)]="nuovoProdotto.prezzo"
+placeholder="Prezzo"
+/>
+
+
+
+<input
+type="number"
+[(ngModel)]="nuovoProdotto.quantita"
+placeholder="Quantità"
+/>
+
+
+
+<select
+[(ngModel)]="nuovoProdotto.categoriaId">
+
+
+<option
+[value]="0">
+
+Seleziona categoria
+
+</option>
+
+
+
+@for (categoria of categorie; track categoria.id) {
+
+
+<option
+[value]="categoria.id">
+
+{{ categoria.nome }}
+
+</option>
+
+
+}
+
+
+</select>
+
+
+
+<input
+type="file"
+accept="image/*"
+(change)="selezionaImmagine($event)"
+/>
+
+
+
+<button
+class="btn-primary"
+(click)="aggiungiProdotto()">
+
+Aggiungi
+
+</button>
+
+
+
+</section>
+
+
+}
+
+
+
 @if (caricamento) {
 
 
@@ -35,12 +147,14 @@ Caricamento prodotti...
 
 
 <p>
-Prezzo: {{ prodotto.prezzo }} €
+Prezzo:
+{{ prodotto.prezzo }} €
 </p>
 
 
 <p>
-Quantità: {{ prodotto.quantita }}
+Quantità:
+{{ prodotto.quantita }}
 </p>
 
 
@@ -74,6 +188,7 @@ Elimina
 
 
 }
+
 
 
 
@@ -160,6 +275,7 @@ Salva modifiche
 
 
 }
+
 
 
 </section>
