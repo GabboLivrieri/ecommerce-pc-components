@@ -1,0 +1,258 @@
+.profilo-card {
+
+  max-width: 900px;
+  margin: 40px auto 20px;
+  padding: 30px;
+  background: var(--color-surface, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(28, 30, 43, 0.08);
+  border: 1px solid #e5e6f0;
+
+}
+
+
+
+.profilo-card h1 {
+
+  margin-bottom: 25px;
+  color: #1c1e2b;
+
+}
+
+
+
+.dati {
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+}
+
+
+
+.dati p {
+
+  margin: 0;
+  color: #666a80;
+
+}
+
+
+
+.dati strong {
+
+  color: #1c1e2b;
+
+}
+
+
+
+form.dati {
+
+  max-width: 900px;
+  margin: 25px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e6f0;
+  box-shadow: 0 8px 24px rgba(28, 30, 43, 0.06);
+
+}
+
+
+
+label {
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+  color: #1c1e2b;
+
+}
+
+
+
+input {
+
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdff0;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+
+}
+
+
+
+input:focus {
+
+  border-color: #5b5bf0;
+  box-shadow: 0 0 0 3px rgba(91,91,240,0.12);
+
+}
+
+
+
+.azioni-profilo {
+
+  max-width: 900px;
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+
+}
+
+
+
+.btn-primary {
+
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #5b5bf0;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+
+}
+
+
+
+.btn-primary:hover {
+
+  background: #4342d8;
+
+}
+
+
+
+.btn-primary:disabled {
+
+  opacity: 0.5;
+  cursor: not-allowed;
+
+}
+
+
+
+.btn-logout {
+
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #e05555;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+
+}
+
+
+
+.btn-logout:hover {
+
+  background: #c74444;
+
+}
+
+
+
+h2 {
+
+  max-width: 900px;
+  margin: 30px auto 15px;
+  color: #1c1e2b;
+
+}
+
+
+
+hr {
+
+  max-width: 900px;
+  margin: 35px auto;
+  border: none;
+  border-top: 1px solid #e5e6f0;
+
+}
+
+
+
+.prodotto-venduto {
+
+  max-width: 900px;
+  margin: 15px auto;
+  padding: 20px;
+  background: #f8f9ff;
+  border-radius: 12px;
+  border: 1px solid #ececff;
+
+}
+
+
+
+.prodotto-venduto h3 {
+
+  margin-top: 0;
+  color: #4342d8;
+
+}
+
+
+
+.prodotto-venduto p {
+
+  margin: 8px 0;
+  color: #666a80;
+
+}
+
+
+
+form button {
+
+  align-self: flex-start;
+  margin-top: 15px;
+
+}
+
+
+
+@media (max-width: 600px) {
+
+
+  .profilo-card,
+  form.dati {
+
+    margin: 20px;
+    padding: 20px;
+
+  }
+
+
+
+  .azioni-profilo {
+
+    margin: 20px;
+    flex-direction: column;
+
+  }
+
+
+
+  .btn-primary,
+  .btn-logout {
+
+    width: 100%;
+
+  }
+
+
+}

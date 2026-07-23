@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { VenditoreService } from '../../services/venditore.service';
 import { AuthService } from '../../services/auth.service';
 import { ProdottoService } from '../../services/prodotto.service';
 import { CategoriaService } from '../../services/categoria.service';
+
 import { Prodotto } from '../../models/prodotto.models';
 import { Categoria } from '../../models/categoria.models';
 
 
 @Component({
   selector: 'app-miei-prodotti',
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule
@@ -30,7 +33,22 @@ export class MieiProdotti implements OnInit {
   idVenditore!: number;
 
 
+  mostraForm = false;
+
+
+  nuovoProdotto = {
+
+    nome: '',
+    descrizione: '',
+    prezzo: 0,
+    quantita: 0,
+    categoriaId: 0
+
+  };
+
+
   prodottoModifica: Prodotto | null = null;
+
 
   immagine: File | null = null;
 
@@ -41,7 +59,7 @@ export class MieiProdotti implements OnInit {
     private prodottoService: ProdottoService,
     private categoriaService: CategoriaService,
     private authService: AuthService
-  ) { }
+  ) {}
 
 
 
@@ -60,14 +78,29 @@ export class MieiProdotti implements OnInit {
 
 
     this.venditoreService
-      .getVenditoreById(utente.id)
+      .getVenditori()
       .subscribe({
 
-        next: (venditore) => {
+        next: venditori => {
 
-          this.idVenditore = venditore.id!;
+
+          const venditore = venditori.find(
+            v => v.utente.id === utente.id
+          );
+
+
+          if (!venditore?.id) {
+
+            return;
+
+          }
+
+
+          this.idVenditore = venditore.id;
+
 
           this.caricaProdotti();
+
 
         }
 
@@ -95,7 +128,7 @@ export class MieiProdotti implements OnInit {
   caricaProdotti(): void {
 
 
-    this.venditoreService
+    this.prodottoService
       .getProdottiVenditore(this.idVenditore)
       .subscribe({
 
@@ -108,21 +141,6 @@ export class MieiProdotti implements OnInit {
         }
 
       });
-
-
-  }
-
-
-
-  apriModifica(prodotto: Prodotto): void {
-
-
-    this.prodottoModifica = {
-      ...prodotto
-    };
-
-
-    this.immagine = null;
 
 
   }
@@ -145,16 +163,13 @@ export class MieiProdotti implements OnInit {
 
 
 
-  modificaProdotto(): void {
+  aggiungiProdotto(): void {
 
 
     const utente = this.authService.utenteCorrente;
 
 
-    if (
-      !utente?.id ||
-      !this.prodottoModifica
-    ) {
+    if (!utente?.id) {
 
       return;
 
@@ -163,6 +178,136 @@ export class MieiProdotti implements OnInit {
 
 
     const formData = new FormData();
+
+
+
+    formData.append(
+      'idUtente',
+      utente.id.toString()
+    );
+
+
+    formData.append(
+      'nome',
+      this.nuovoProdotto.nome
+    );
+
+
+    formData.append(
+      'descrizione',
+      this.nuovoProdotto.descrizione
+    );
+
+
+    formData.append(
+      'prezzo',
+      this.nuovoProdotto.prezzo.toString()
+    );
+
+
+    formData.append(
+      'quantita',
+      this.nuovoProdotto.quantita.toString()
+    );
+
+
+    formData.append(
+      'idCategoria',
+      this.nuovoProdotto.categoriaId.toString()
+    );
+
+
+
+    if (this.immagine) {
+
+      formData.append(
+        'immagine',
+        this.immagine
+      );
+
+    }
+
+
+
+    this.prodottoService
+      .addProdotto(formData)
+      .subscribe({
+
+        next: () => {
+
+
+          this.nuovoProdotto = {
+
+            nome: '',
+            descrizione: '',
+            prezzo: 0,
+            quantita: 0,
+            categoriaId: 0
+
+          };
+
+
+          this.immagine = null;
+
+          this.mostraForm = false;
+
+
+          this.caricaProdotti();
+
+
+        }
+
+      });
+
+
+  }
+
+
+
+  apriModifica(prodotto: Prodotto): void {
+
+
+    this.prodottoModifica = {
+
+      ...prodotto
+
+    };
+
+
+    this.immagine = null;
+
+
+  }
+
+
+
+  modificaProdotto(): void {
+
+
+    const utente = this.authService.utenteCorrente;
+
+
+    if (
+      !utente?.id ||
+      !this.prodottoModifica?.id
+    ) {
+
+      return;
+
+    }
+
+
+
+    if (!this.prodottoModifica.categoria) {
+
+      return;
+
+    }
+
+
+
+    const formData = new FormData();
+
 
 
     formData.append(
@@ -193,21 +338,6 @@ export class MieiProdotti implements OnInit {
       'quantita',
       this.prodottoModifica.quantita.toString()
     );
-
-
-    if (!this.prodottoModifica.categoria) {
-      return;
-    }
-
-    formData.append(
-      'quantita',
-      this.prodottoModifica.quantita.toString()
-    );
-
-
-    if (!this.prodottoModifica.categoria) {
-      return;
-    }
 
 
     formData.append(
@@ -265,7 +395,10 @@ export class MieiProdotti implements OnInit {
 
 
     this.prodottoService
-      .deleteProdotto(id, utente.id)
+      .deleteProdotto(
+        id,
+        utente.id
+      )
       .subscribe({
 
         next: () => {
@@ -278,7 +411,6 @@ export class MieiProdotti implements OnInit {
 
 
   }
-
 
 
 }

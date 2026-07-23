@@ -16,9 +16,15 @@ import { Router } from '@angular/router';
 })
 export class Ordini implements OnInit {
 
+
   ordini: Ordine[] = [];
 
+
   prodottiOrdine: { [idOrdine: number]: OrdineProdotto[] } = {};
+
+
+  dettagliAperti: { [idOrdine: number]: boolean } = {};
+
 
 
   constructor(
@@ -29,63 +35,108 @@ export class Ordini implements OnInit {
   ) {}
 
 
+
   ngOnInit(): void {
 
+
     const utente = this.authService.utenteCorrente;
+
 
 
     if (!utente?.id) {
 
       this.router.navigateByUrl('/login');
+
       return;
 
     }
+
 
 
     this.ordineService
       .getOrdiniUtente(utente.id)
       .subscribe(ordini => {
 
+
         this.ordini = ordini;
+
 
 
         this.ordini.forEach(ordine => {
 
+
           if (!ordine.id) {
+
             return;
+
           }
+
 
 
           this.ordineProdottoService
             .getProdottiOrdine(ordine.id)
             .subscribe(prodotti => {
 
+
               this.prodottiOrdine[ordine.id!] = prodotti;
+
 
             });
 
+
         });
+
 
       });
 
+
   }
+
+
+
+
+  mostraDettagli(id?: number): void {
+
+
+    if (!id) {
+
+      return;
+
+    }
+
+
+    this.dettagliAperti[id] =
+      !this.dettagliAperti[id];
+
+
+  }
+
+
+
+
 
   pagaOrdine(id?: number): void {
 
-  if (!id) {
-    return;
+
+    if (!id) {
+
+      return;
+
+    }
+
+
+
+    this.router.navigate(
+      ['/pagamento'],
+      {
+        state: {
+          idOrdine: id
+        }
+      }
+    );
+
+
   }
 
-
-  this.router.navigate(
-    ['/pagamento'],
-    {
-      state: {
-        idOrdine: id
-      }
-    }
-  );
-
-}
 
 }

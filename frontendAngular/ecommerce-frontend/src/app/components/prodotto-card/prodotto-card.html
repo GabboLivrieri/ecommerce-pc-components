@@ -1,38 +1,28 @@
 <article class="product-card">
   <div class="product-image">
-    <img [src]="'data:image/jpeg;base64,' + prodotto.immagine">
+    <img [src]="'data:image/jpeg;base64,' + prodotto.immagine" />
   </div>
-
-  
 
   <div class="product-info">
     @if (prodotto.categoria.nome) {
       <span class="product-category">{{ prodotto.categoria.nome }}</span>
     }
 
-    <h3 class="product-name">{{ prodotto.nome }}</h3>
+    <h3 class="product-name" (click)="apriDettaglio()">
+      {{ prodotto.nome }}
+    </h3>
     <p class="product-description">{{ prodotto.descrizione }}</p>
 
-   <div class="product-footer">
+    <div class="product-footer">
+      <span class="product-price"> {{ prodotto.prezzo | number: '1.2-2' }} € </span>
 
-  <span class="product-price">
-    {{ prodotto.prezzo | number:'1.2-2' }} €
-  </span>
+      <span class="product-stock" [class.out-of-stock]="!disponibile">
+        {{ disponibile ? 'Disponibile' : 'Esaurito' }}
+      </span>
 
-  <span class="product-stock" [class.out-of-stock]="!disponibile">
-    {{ disponibile ? 'Disponibile' : 'Esaurito' }}
-  </span>
-
-
-  <button
-    class="btn-primary"
-    [disabled]="!disponibile"
-    (click)="aggiungiAlCarrello()">
-
-    Aggiungi al carrello
-
-  </button>
-
-</div>
+      <button class="btn-primary" [disabled]="!disponibile" (click)="aggiungiAlCarrello()">
+        Aggiungi al carrello
+      </button>
+    </div>
   </div>
 </article>

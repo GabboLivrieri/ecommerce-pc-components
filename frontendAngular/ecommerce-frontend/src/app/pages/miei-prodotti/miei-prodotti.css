@@ -1,16 +1,113 @@
 .pagina {
 
-  padding: 30px;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
 
 }
+
+
+
+h1 {
+
+  color: #1c1e2b;
+  margin-bottom: 25px;
+
+}
+
+
+
+h2 {
+
+  color: #1c1e2b;
+  margin-bottom: 20px;
+
+}
+
+
+
+.btn-primary {
+
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #5b5bf0;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  margin: 10px 10px 20px 0;
+
+}
+
+
+
+.btn-primary:hover {
+
+  background: #4342d8;
+
+}
+
+
+
+.form-modifica {
+
+  max-width: 700px;
+  margin: 20px 0 40px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e6f0;
+  box-shadow: 0 8px 24px rgba(28,30,43,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+}
+
+
+
+.form-modifica input,
+.form-modifica textarea,
+.form-modifica select {
+
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdff0;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+
+}
+
+
+
+.form-modifica textarea {
+
+  resize: vertical;
+  min-height: 100px;
+
+}
+
+
+
+.form-modifica input:focus,
+.form-modifica textarea:focus,
+.form-modifica select:focus {
+
+  border-color: #5b5bf0;
+  box-shadow: 0 0 0 3px rgba(91,91,240,0.12);
+
+}
+
 
 
 .lista {
 
   display: grid;
-
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
 
 }
@@ -19,10 +116,87 @@
 
 .card {
 
+  background: #ffffff;
+  border: 1px solid #e5e6f0;
+  border-radius: 16px;
   padding: 20px;
+  box-shadow: 0 8px 24px rgba(28,30,43,0.08);
+  transition: 0.2s;
 
-  border: 1px solid #ddd;
+}
 
-  border-radius: 10px;
+
+
+.card:hover {
+
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(28,30,43,0.14);
+
+}
+
+
+
+.card h3 {
+
+  margin-top: 0;
+  color: #4342d8;
+
+}
+
+
+
+.card p {
+
+  color: #666a80;
+  margin: 8px 0;
+
+}
+
+
+
+.card .btn-primary {
+
+  width: 100%;
+  margin-top: 10px;
+  margin-right: 0;
+
+}
+
+
+
+@media (max-width: 600px) {
+
+
+  .pagina {
+
+    margin: 20px auto;
+
+  }
+
+
+
+  .form-modifica {
+
+    padding: 20px;
+
+  }
+
+
+
+  .lista {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+
+  .btn-primary {
+
+    width: 100%;
+    margin-right: 0;
+
+  }
+
 
 }

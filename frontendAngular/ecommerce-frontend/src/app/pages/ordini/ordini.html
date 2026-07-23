@@ -1,64 +1,163 @@
 <section class="ordini-wrapper">
+
   <div class="ordini-card">
+
     <h1>I miei ordini</h1>
 
+
+
     @if (ordini.length > 0) {
-    @for (ordine of ordini; track ordine.id) {
-    <div class="ordine">
-      <h2>Ordine #{{ ordine.id }}</h2>
 
-      <p>
-        Data:
-        {{ ordine.dataOrdine }}
-      </p>
 
-      <p>
-        Totale:
-        {{ ordine.totale | number: '1.2-2' }} €
-      </p>
+      @for (ordine of ordini; track ordine.id) {
 
-      <p>
-        Stato:
-        {{ ordine.stato }}
-      </p>
 
-      @if (ordine.stato === 'IN_ATTESA') {
+        <div class="ordine">
 
-      <button class="btn-primary" (click)="pagaOrdine(ordine.id)">
-        Completa pagamento
-      </button>
+
+          <h2>
+            Ordine #{{ ordine.id }}
+          </h2>
+
+
+
+          <p>
+            Data:
+            {{ ordine.dataOrdine }}
+          </p>
+
+
+
+          <p>
+            Totale:
+            {{ ordine.totale | number:'1.2-2' }} €
+          </p>
+
+
+
+          <p>
+            Stato:
+            {{ ordine.stato }}
+          </p>
+
+
+
+
+          @if (ordine.stato === 'IN_ATTESA') {
+
+
+            <button
+              class="btn-primary"
+              (click)="pagaOrdine(ordine.id)">
+
+              Completa pagamento
+
+            </button>
+
+
+          }
+
+
+
+
+          <button
+            class="btn-primary"
+            (click)="mostraDettagli(ordine.id)">
+
+
+            {{ dettagliAperti[ordine.id!] 
+              ? 'Nascondi dettagli' 
+              : 'Mostra dettagli' }}
+
+
+          </button>
+
+
+
+
+
+          @if (dettagliAperti[ordine.id!]) {
+
+
+            <hr>
+
+
+            <h3>
+              Prodotti acquistati
+            </h3>
+
+
+
+
+            @if (prodottiOrdine[ordine.id!]) {
+
+
+
+              @for (prodotto of prodottiOrdine[ordine.id!]; track prodotto.id) {
+
+
+                <div class="prodotto-ordine">
+
+
+                  <h4>
+                    {{ prodotto.prodotto.nome }}
+                  </h4>
+
+
+                  <p>
+                    Quantità:
+                    {{ prodotto.quantita }}
+                  </p>
+
+
+                  <p>
+                    Prezzo:
+                    {{ prodotto.prezzo | number:'1.2-2' }} €
+                  </p>
+
+
+                </div>
+
+
+              }
+
+
+            } @else {
+
+
+              <p>
+                Caricamento prodotti...
+              </p>
+
+
+            }
+
+
+
+          }
+
+
+
+        </div>
+
 
       }
 
-      <hr />
 
-      <h3>Prodotti:</h3>
 
-      @if (ordine.id && prodottiOrdine[ordine.id]) {
-      @for (prodotto of prodottiOrdine[ordine.id]; track prodotto.id) {
-      <div class="prodotto-ordine">
-        <p>
-          {{ prodotto.prodotto.nome }}
-        </p>
-
-        <p>
-          Quantità:
-          {{ prodotto.quantita }}
-        </p>
-
-        <p>
-          Prezzo:
-          {{ prodotto.prezzo | number: '1.2-2' }} €
-        </p>
-      </div>
-      }
-      } @else {
-      <p>Caricamento prodotti...</p>
-      }
-    </div>
-    }
     } @else {
-    <p>Non hai ancora effettuato ordini.</p>
+
+
+      <p>
+        Non hai ancora effettuato ordini.
+      </p>
+
+
     }
+
+
+
   </div>
+
+
 </section>
