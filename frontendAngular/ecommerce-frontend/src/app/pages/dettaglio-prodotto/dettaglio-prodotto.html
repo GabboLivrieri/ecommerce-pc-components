@@ -1,0 +1,75 @@
+<section class="dettaglio">
+
+
+@if (caricamento) {
+
+
+<p>
+Caricamento prodotto...
+</p>
+
+
+} @else if (prodotto) {
+
+
+<div class="immagine">
+
+
+<img 
+[src]="'data:image/jpeg;base64,' + prodotto.immagine">
+
+
+</div>
+
+
+
+<div class="info">
+
+
+<h1>
+{{ prodotto.nome }}
+</h1>
+
+
+<p>
+{{ prodotto.descrizione }}
+</p>
+
+
+<p>
+Categoria:
+{{ prodotto.categoria.nome }}
+</p>
+
+
+<h2>
+{{ prodotto.prezzo | number:'1.2-2' }} €
+</h2>
+
+
+<p>
+Disponibilità:
+{{ prodotto.quantita }}
+</p>
+
+
+
+<button
+class="btn-primary"
+[disabled]="!disponibile"
+(click)="aggiungiAlCarrello()">
+
+
+Aggiungi al carrello
+
+
+</button>
+
+
+</div>
+
+
+}
+
+
+</section>

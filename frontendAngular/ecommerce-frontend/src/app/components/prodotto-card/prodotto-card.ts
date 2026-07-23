@@ -5,10 +5,10 @@ import { AuthService } from '../../services/auth.service';
 import { CarrelloService } from '../../services/carrello.service';
 import { CarrelloProdottoService } from '../../services/carrelloProdotto.service';
 import { CarrelloProdotto } from '../../models/carrelloProdotto.models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-prodotto-card',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './prodotto-card.html',
   styleUrl: './prodotto-card.css'
@@ -33,10 +33,11 @@ export class ProdottoCardComponent {
 
 
   constructor(
-    private authService: AuthService,
-    private carrelloService: CarrelloService,
-    private carrelloProdottoService: CarrelloProdottoService
-  ) {}
+  private authService: AuthService,
+  private carrelloService: CarrelloService,
+  private carrelloProdottoService: CarrelloProdottoService,
+  private router: Router
+) {}
 
 
 
@@ -170,6 +171,14 @@ export class ProdottoCardComponent {
     window.location.reload();
 
   }
+
+  apriDettaglio(): void {
+
+  this.router.navigateByUrl(
+    `/prodotto/${this.prodotto.id}`
+  );
+
+}
 
 
 }

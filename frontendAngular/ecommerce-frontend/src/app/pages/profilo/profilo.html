@@ -30,13 +30,17 @@
 
 </div>
 
-<button class="btn-primary" (click)="abilitaModifica()">
-  Modifica profilo
-</button>
+<div class="azioni-profilo">
 
-<button class="btn-logout" (click)="logout()">
-  Logout
-</button>
+  <button class="btn-primary" (click)="abilitaModifica()">
+    Modifica profilo
+  </button>
+
+  <button class="btn-logout" (click)="logout()">
+    Logout
+  </button>
+
+</div>
 
 
 @if (modifica) {
